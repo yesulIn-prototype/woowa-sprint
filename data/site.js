@@ -13,8 +13,8 @@ site({
   links: {
     service: "https://yesulin.art",
     github: "https://github.com/woowacourse-teams/2026-yesulin",
-    hypothesisDoc: "", // 가설 검증 기록 문서 (스프린트마다 새로 만들지 않고 한 문서에 쌓는다)
-    userReport: "", // 유저 데이터 리포트 (한 문서에 쌓는다)
+    hypothesisDoc: "hypotheses.html", // 가설 검증 기록 문서 (스프린트마다 새로 만들지 않고 한 문서에 쌓는다)
+    userReport: "user-report.html", // 유저 데이터 리포트 (한 문서에 쌓는다)
   },
 
   // 유저 데이터 리포트의 정의 부분. 값은 스프린트마다 sprint-N.js의 userData에 적는다.

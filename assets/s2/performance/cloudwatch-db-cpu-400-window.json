@@ -1,0 +1,18 @@
+{
+  "source": "User-opened AWS CloudWatch DASHBOARD-yesulin; EC2 CPU widget CSV export via browser UI",
+  "region": "ap-northeast-2",
+  "timezone": "Asia/Seoul (UTC+09:00)",
+  "metric": "AWS/EC2 CPUUtilization",
+  "statistic": "Average",
+  "period_seconds": 300,
+  "series_label": "db-dev",
+  "original_file_sha256": "9f26fffa32ecb27aa50b9e727360a6f03ecf0bce3caa25a1c8d28920e8a56139",
+  "rows": 4,
+  "app_dev_missing_samples": 4,
+  "notes": [
+    "Only DEV DB CPU retained; account identifiers, instance identifiers and PROD series omitted.",
+    "Five-minute averages cannot validate one-second host samples or 60-second test averages.",
+    "Empty backend-dev values remain unavailable; they are not zero.",
+    "Run identifiers in the companion report locate executions, not confirmed main-measurement start times."
+  ]
+}

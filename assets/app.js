@@ -68,6 +68,7 @@
       .replace(/`([^`]+)`/g, "<code>$1</code>")
       .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
       .replace(/\[([^\]]+)\]\((#[\w-]+)\)/g, '<a href="$2">$1</a>')
+      .replace(/\[([^\]]+)\]\((assets\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
       .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
       .replace(/(^|[\s(])(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
   }
@@ -140,13 +141,13 @@
     return hint ? row(label, empty(hint)) : "";
   };
 
-  // 그림은 누르면 원본 크기로 열린다. src를 비워 두면 "사진 추가 예정" 자리만 잡는다.
+  // 그림은 본문에 바로 표시한다. src를 비워 두면 "사진 추가 예정" 자리만 잡는다.
   // span은 한 줄 12칸 중 차지할 칸 수다. 비우면 한 줄을 다 쓴다.
   const figureOf = ({ src, caption, span }) => {
     const cap = filled(caption) ? `<figcaption>${inline(caption)}</figcaption>` : "";
     const style = span ? ` style="grid-column: span ${Number(span)}"` : "";
     return filled(src)
-      ? `<figure${style}><a href="${esc(src)}" target="_blank" rel="noopener"><img src="${esc(src)}" alt="${esc(caption || "")}" loading="lazy"></a>${cap}</figure>`
+      ? `<figure${style}><img src="${esc(src)}" alt="${esc(caption || "")}" loading="lazy">${cap}</figure>`
       : `<figure class="is-placeholder"${style}><div class="placeholder">사진 추가 예정</div>${cap}</figure>`;
   };
 
@@ -185,6 +186,47 @@
     `<div class="table-scroll"><table><thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${rows
       .map((r) => `<tr>${r.map((c, i) => (i === 0 ? `<th scope="row">${c}</th>` : `<td>${c}</td>`)).join("")}</tr>`)
       .join("")}</tbody></table></div>`;
+
+  function metricComparison(items) {
+    return `<div class="metric-comparison">${items.map((item) => `<article class="metric-card">
+      <h4>${inline(item.label)}</h4>
+      <div class="metric-values">
+        <dl><dt>통합 전</dt><dd>${inline(item.before)}</dd>${filled(item.beforeDetail) ? `<dd class="metric-detail">${inline(item.beforeDetail)}</dd>` : ""}</dl>
+        <span class="metric-arrow" aria-hidden="true">→</span>
+        <dl><dt>통합 후</dt><dd>${inline(item.after)}</dd>${filled(item.afterDetail) ? `<dd class="metric-detail">${inline(item.afterDetail)}</dd>` : ""}</dl>
+      </div>
+    </article>`).join("")}</div>`;
+  }
+
+  function reportVisuals(blocks) {
+    return (blocks || []).map((v) => {
+      let content = "";
+      if (v.kind === "bars") {
+        const max = v.max || Math.max(1, ...v.rows.map((r) => r.value));
+        const reference = v.reference ? `<i class="rv-reference" style="left:${v.reference.value / max * 100}%" aria-hidden="true"></i>` : "";
+        content = `<div class="rv-bars" role="list">${v.rows.map((r) => `<div class="rv-bar-row${r.partial ? " is-partial" : ""}" role="listitem">
+          <div class="rv-bar-label">${inline(r.label)}${filled(r.detail) ? `<small>${inline(r.detail)}</small>` : ""}</div>
+          <div class="rv-track" aria-hidden="true"><span style="width:${Math.max(0, Math.min(100, r.value / max * 100))}%"></span>${reference}</div>
+          <strong class="rv-value">${esc(r.display || `${r.value}${v.unit || ""}`)}</strong>
+        </div>`).join("")}</div>`;
+      } else if (v.kind === "flow") {
+        content = `<div class="rv-flow">${v.columns.map((c) => `<div class="rv-flow-column">
+          <h5>${inline(c.label)}</h5><ul>${c.steps.map((step) => `<li>${inline(step)}</li>`).join("")}</ul>
+          ${filled(c.detail) ? `<p>${inline(c.detail)}</p>` : ""}
+        </div>`).join("")}</div>`;
+      } else if (v.kind === "timeline") {
+        content = `<div class="rv-days">${v.days.map((d) => `<div class="rv-day"><h5>${esc(d.date)}</h5>
+          <ol>${d.entries.map((e) => `<li><time>${esc(e.time)}</time><span>${inline(e.label)}</span></li>`).join("")}</ol>
+        </div>`).join("")}</div>`;
+      }
+      if (!content) return "";
+      return `<section class="report-visual" aria-label="${esc(v.title)}"><h4>${inline(v.title)}</h4>
+        ${filled(v.subtitle) ? `<p class="rv-subtitle">${inline(v.subtitle)}</p>` : ""}
+        ${v.reference ? `<p class="rv-key"><i aria-hidden="true"></i>${inline(v.reference.label)}</p>` : ""}
+        ${content}${filled(v.note) ? `<p class="rv-note">${inline(v.note)}</p>` : ""}
+      </section>`;
+    }).join("");
+  }
 
   const cell = (v) => (filled(v) ? inline(v) : `<span class="dash">—</span>`);
 
@@ -356,10 +398,10 @@
       ["team", "팀으로 일하는 방식", secSoftskill(s)],
       ["retro", "회고와 다음 스프린트", secRetro(s)],
       ["coach", "코치에게", secCoach(s)],
-    ];
+    ].filter(([id]) => !(s.presentation?.hideSections || []).includes(id));
 
     // site.js의 layout이 "tabs"면 섹션을 상단 탭으로 나눠 보여 준다. 비우면 예전처럼 한 페이지에 모두 보인다.
-    const tabs = store.site.layout === "tabs" ? sprintTabs() : null;
+    const tabs = store.site.layout === "tabs" ? sprintTabs().map((t) => ({ ...t, ids: t.ids.filter((id) => sections.some(([sid]) => sid === id)) })).filter((t) => t.ids.length) : null;
     const tabOf = (id) => (tabs ? tabs.find((t) => t.ids.includes(id))?.key : "");
 
     const toc = sections
@@ -498,7 +540,8 @@
     return `<article class="hl" id="work-${n}">
       ${subhead(inline(h.title), badge(h.status))}
       <p class="hl-meta">${esc(h.owner || "담당 —")}${filled(h.note) ? ` · ${inline(h.note)}` : ""}</p>
-      ${filled(h.body) ? `<div class="prose hl-body">${rich(h.body)}</div>` : `<p class="hl-empty">발표 자료 준비 중</p>`}
+      ${reportVisuals(h.visuals)}
+      ${filled(h.summary) ? `<div class="prose hl-body">${rich(h.summary)}</div>${reportDetails("진행 과정과 상세 근거", rich(h.body))}` : filled(h.body) ? `<div class="prose hl-body">${rich(h.body)}</div>` : `<p class="hl-empty">발표 자료 준비 중</p>`}
       ${figures(h.figures)}
       ${
         links.length || h.more
@@ -554,6 +597,7 @@
   }
 
   function secHypothesis(s) {
+    if (s.hypothesis?.concise) return productReport(s);
     const h = s.hypothesis || {};
     const u = s.userData || {};
     // 정의는 스프린트마다 바뀔 수 있어, sprint-N.js의 userData.metrics가 있으면 site.js 값보다 먼저 쓴다.
@@ -562,20 +606,7 @@
     const recruits = recruitsOf(s);
     // cycles가 있으면 여러 사이클을 접었다 펼 수 있는 목록으로, 없으면 한 사이클의 칸으로 보여 준다.
     const cycles = (h.cycles || []).filter((c) => filled(c.title) || filled(c.hypothesis));
-    const hypothesisHtml = cycles.length
-      ? `${filled(h.intro) ? `<div class="prose hyp-note">${rich(h.intro)}</div>` : ""}
-        <div class="cycles">${cycles
-          .map(
-            (c, i) => `<details class="cycle"${c.featured ? " open" : ""}>
-              <summary><span class="cycle-no">${i + 1}/${cycles.length}</span><span class="cycle-title">${inline(c.title)}</span>${
-                c.featured ? '<span class="cycle-tag">대표 사례</span>' : ""
-              }${badge(c.verdict)}</summary>
-              <div class="cycle-body">${cycleFields(c)}${figures(c.figures)}</div>
-            </details>`,
-          )
-          .join("")}</div>
-        ${filled(h.outro) ? `<div class="prose hyp-note">${rich(h.outro)}</div>` : ""}`
-      : cycleFields(h);
+    const hypothesisHtml = hypothesisRecord(h);
 
     const stat = (label, value, sub) =>
       `<div class="stat"><div class="stat-label">${label}</div><div class="stat-value">${cell(value)}</div>${
@@ -600,6 +631,7 @@
       : "";
 
     return `
+      ${productSubmission(s)}
       ${subhead(
         "가설 사이클",
         [cycles.length ? `<span class="mono">${cycles.length}건</span>` : "", link(store.site.links?.hypothesisDoc, "가설 검증 기록")].join(""),
@@ -610,6 +642,41 @@
         filled(u.unavailable) ? `${subhead("유저 데이터")}<div class="prose">${rich(u.unavailable)}</div>` : userData(u, m, wau, stat)
       }</div>
       ${recruiting}`;
+  }
+
+  function hypothesisRecord(h) {
+    const cycles = (h.cycles || []).filter((c) => filled(c.title) || filled(c.hypothesis));
+    return cycles.length
+      ? `${filled(h.intro) ? `<div class="prose hyp-note">${rich(h.intro)}</div>` : ""}
+        <div class="cycles">${cycles
+          .map(
+            (c, i) => `<details class="cycle"${c.featured ? " open" : ""}>
+              <summary><span class="cycle-no">${i + 1}/${cycles.length}</span><span class="cycle-title">${inline(c.title)}</span>${
+                c.featured ? '<span class="cycle-tag">대표 사례</span>' : ""
+              }${badge(c.verdict)}</summary>
+              <div class="cycle-body">${reportVisuals(c.visuals)}${cycleFields(c)}${figures(c.figures)}</div>
+            </details>`,
+          )
+          .join("")}</div>
+        ${filled(h.outro) ? `<div class="prose hyp-note">${rich(h.outro)}</div>` : ""}`
+      : cycleFields(h);
+
+  }
+
+  const reportDetails = (label, html) => filled(html)
+    ? `<details class="report-details"><summary>${esc(label)}</summary><div class="report-details-body prose">${html}</div></details>` : "";
+
+  function productSubmission(s) {
+    const p = s.productSubmission;
+    if (!p) return "";
+    return `<div class="submission-summary">${subhead("제출 전 점검 · 제품 요구사항")}
+      <div class="prose">${rich(p.note)}</div>
+      ${linkField("가설 검증 기록", store.site.links?.hypothesisDoc, "스프린트별 가설 누적 문서")}
+      ${linkField("유저 데이터 리포트", store.site.links?.userReport, "스프린트별 데이터 누적 문서")}
+      ${linkField("랜딩페이지", p.landing, "yesulin.art")}
+      ${criteriaRow(p.criteria)}
+      ${field("랜딩페이지 확인", p.landingNote)}
+    </div>`;
   }
 
   // 가설 사이클 한 건의 칸 (가설 · 실험 · 관측 · 결론 · 러닝 · 다음 액션 · 자신감)
@@ -656,6 +723,7 @@
   }
 
   function userData(u, m, wau, stat) {
+    if (u.report) return userReport(u, m);
     return `
       ${subhead("유저 데이터", link(store.site.links?.userReport, "유저 데이터 리포트"))}
       <div class="stats">
@@ -669,11 +737,12 @@
         )}
       </div>
       ${field("활성 유저 정의", m.activeAction, "사용자가 어떤 행동을 하면 활성으로 보는가, 왜 그 행동인가. DAU·WAU·MAU 중 무엇이 중요하고 왜인가")}
+      ${reportVisuals(u.visuals)}
       ${field("활성 유저 데이터", u.activeData, "팀이 고른 활성 유저 지표(DAU, WAU 등)와 근거 자료")}
       ${figures(u.figures)}
       ${
         filled(u.retentionChart)
-          ? figure(u.retentionChart, "리텐션 그래프")
+          ? figure(u.retentionChart, u.retentionCaption || "리텐션 그래프")
           : field("리텐션", u.retentionNote, "X축은 시간, Y축은 리텐션 비율 (D7, W4 등). 아직 잴 수 없다면 그 이유")
       }
       ${field("활성 유저 해석", u.activeReading, "활성 유저 지표로 본 핵심 가치와 유저 행동. 숫자가 0이거나 없다면 그 이유")}
@@ -682,6 +751,113 @@
       ${field("핵심 지표 해석", u.coreReading, "핵심 지표로 본 핵심 가치와 유저 행동")}
       ${field("집계 제외", m.exclusion, "팀 밖 사용자만 센다. 팀원·테스트 계정을 어떻게 뺐는가")}
       ${filled(u.nextDefinition) ? field("다음 스프린트부터", u.nextDefinition, "") : ""}`;
+  }
+
+  // S2 제출은 결론부터 읽고, 측정 조건과 원자료를 필요할 때 확인한다.
+  function backendReport(t, status) {
+    const r = t.report;
+    const nf = (value) => Number(value).toLocaleString("ko-KR");
+    return `<article class="coach-report backend-report">
+      <div class="report-kicker"><span>${esc(t.topic)}</span>${badge(status)}</div>
+      <section class="report-block">
+        <h3>목표 수치를 먼저 정하지 않은 이유</h3>
+        <div class="prose">${rich(r.reason)}</div>
+      </section>
+      <section class="report-block">
+        <h3>부하 테스트 전후</h3>
+        <p class="report-lead">${inline(r.beforeAfter)}</p>
+        <figure class="load-results" aria-label="개선 전 100RPS와 개선 후 400RPS의 요청 결과 비교">
+          <div class="load-result-grid">${r.runs.map((run, i) => {
+            const failRate = run.failed / run.total * 100;
+            return `<div class="load-result${i ? " is-after" : ""}">
+              <p class="result-eyebrow">${esc(run.label)}</p>
+              <p class="result-load"><strong>${nf(run.rps)}</strong><span>RPS</span></p>
+              <p class="result-state">${run.failed ? "요청의 절반 이상 실패" : "본 측정 오류 0건"}</p>
+              <div class="result-bar" role="img" aria-label="성공 ${(100 - failRate).toFixed(2)}%, 실패 ${failRate.toFixed(2)}%"><span style="width:${100 - failRate}%"></span><i style="width:${failRate}%"></i></div>
+              <dl class="result-numbers"><div><dt>오류율</dt><dd>${failRate ? failRate.toFixed(2) : "0"}%</dd></div><div><dt>p95 응답시간</dt><dd>${nf(run.p95)}<small> ms</small></dd></div></dl>
+              <p class="result-sample">실패 ${nf(run.failed)} / 전체 ${nf(run.total)}건</p>
+            </div>`;
+          }).join("")}</div>
+          <div class="result-legend"><span><i></i>성공 요청</span><span><i></i>실패 요청</span><span>막대는 각 실행의 요청 결과 비율</span></div>
+          <figcaption>${esc(r.comparisonNote)}</figcaption>
+        </figure>
+        <p class="report-note">${inline(r.boundary)}</p>
+      </section>
+      <section class="report-block">
+        <h3>무엇을 바꿨나</h3>
+        <ol class="report-changes">${r.changes.map((c) => `<li><h4>${esc(c.title)}</h4><p>${esc(c.body)}</p></li>`).join("")}</ol>
+        ${reportDetails("병목 판단과 같은 100RPS 전후 비교", rich(r.diagnosis) + rich(r.controlledComparison))}
+      </section>
+      <section class="report-block">
+        <h3>동작과 DB 변경 검증</h3>
+        <div class="report-proof-grid">${r.verification.map((v) => `<div><h4>${esc(v.title)}</h4><p>${esc(v.body)}</p><div class="report-links">${v.links.map((l) => link(l.url,l.label)).join("")}</div></div>`).join("")}</div>
+      </section>
+      <div class="report-appendix">
+        ${reportDetails("측정 조건과 해석 범위", rich(r.conditions) + rich(r.limits))}
+        ${reportDetails(`공식 완료 조건 확인 · ${t.criteria.filter((c) => c.done).length} / ${t.criteria.length}`, criteriaRow(t.criteria))}
+        <p class="report-source">${link(t.doc, "전체 측정 원자료")} · 사전 목표 수치 설정 항목은 미충족으로 기록했다.</p>
+      </div>
+    </article>`;
+  }
+
+  function productReport(s) {
+    const h = s.hypothesis;
+    const u = s.userData;
+    const p = s.productSubmission;
+    const m = { ...store.site.metrics, ...u.metrics };
+    const cycles = h.cycles || [];
+    const cards = [
+      { value: "31", unit: "/ 57건", label: "공고 재게시 허락", detail: "공고별 누적 연락 기록 · 약 54%" },
+      { value: "+36", unit: "명", label: "학과 소개 전후 알림방 증가", detail: "67 → 103명 · 약 12시간" },
+    ];
+    const recruits = recruitsOf(s);
+    return `<article class="coach-report product-report">
+      <p class="report-kicker">공고를 확보하고, 배우가 찾아오는 경로를 확인했다</p>
+      <div class="product-outcomes">${cards.map((c) => `<div><p>${esc(c.label)}</p><strong>${esc(c.value)}<small>${esc(c.unit)}</small></strong><span>${esc(c.detail)}</span></div>`).join("")}</div>
+      <p class="report-note">두 실험 모두 사전 숫자 기준이 없어 결론은 ‘판정 불가’다. 재게시 허락과 알림방 유입은 관측했지만, 서비스에서 실제 공고를 봤는지는 아직 측정하지 못했다.</p>
+      <section class="report-block"><h3>가설 검증 기록</h3>
+        ${cycles.map((c,i) => `<article class="hypothesis-brief"><div class="hypothesis-index">0${i+1}</div><div><h4>${esc(c.title)}</h4><p>${esc(c.summary || c.observation)}</p><p class="hypothesis-verdict">${badge(c.verdict)}<span>자신감 ${c.confidence != null ? `${esc(c.confidence)} / 10` : "미입력"}</span></p>${reportDetails("실험 기록과 근거 사진", cycleFields(c) + figures(c.figures))}</div></article>`).join("")}
+      </section>
+      <div id="user-data">${userReport(u,m)}</div>
+      <section class="report-block" id="recruit"><h3>제품 제출 링크</h3>
+        <nav class="report-links submission-links" aria-label="제품 제출 문서">${link(store.site.links.hypothesisDoc, "가설 검증 기록")}${link(store.site.links.userReport, "유저 데이터 리포트")}${link(p.landing, "서비스 · yesulin.art")}</nav>
+        <p class="report-note">서비스 주소는 비로그인으로 열리지만, 첫 화면에 소개·사용 순서·시작하기를 갖추는 보완이 남아 있다. 두 누적 문서는 배포 후 코치 접근을 확인한다.</p>
+        ${reportDetails("그 밖의 사용자 모집 활동", table(["활동", "관측", "다음 행동"], recruits.map((r) => [inline(r.title), cell(r.metric), cell(r.next)])))}
+      </section>
+    </article>`;
+  }
+
+  function userReport(u,m) {
+    const r = u.report;
+    return `<div class="coach-report user-report">
+      <section class="report-block"><h3>유저 데이터 · 이번 스프린트</h3>
+        <p class="report-period">${esc(r.period)}</p>
+        <h4>활성 사용자 정의</h4><p>${esc(r.activeDefinition)}</p>
+        <h4 class="observation-label">관측값 · GA4 기본 활성 사용자</h4>
+        <div class="period-observations" aria-label="GA4 기본 활성 사용자 참고 수치">${r.periods.map((p) => `<div><p>${esc(p.label)}</p><strong>${p.value}<small>명</small></strong><span>${esc(p.note)}</span></div>`).join("")}</div>
+        <p class="report-note">${esc(r.observationNote)}</p>
+        <p>${esc(r.interpretation)}</p>
+      </section>
+      <section class="report-block"><h3>핵심 지표 · ${esc(r.metricTitle)}</h3>
+        <p>${esc(r.metricReason)}</p>
+        <div class="metric-target"><div><span>팀에서 정한 기준</span><strong>${esc(r.target)}</strong></div><div><span>현재 측정값</span><strong>${esc(r.current)}</strong></div></div>
+        <p>${esc(r.targetReason)}</p>
+        <p class="metric-formula">${esc(r.formula)}</p>
+        <h4>공고를 공유한 시점의 방 인원</h4>
+        ${table(["공유 시점", "전체 인원", "10% 단순 환산"], r.audienceHistory.map((a) => [esc(a.period), esc(a.members), esc(a.threshold)]))}
+        <p class="report-note">${esc(r.audienceNote)}</p>
+        <p class="report-note">${esc(r.measurement)}</p>
+        ${reportDetails("공고 조회수와 열람자 수는 어떻게 다른가", rich(r.viewNote))}
+      </section>
+      <section class="report-block"><h3>4주 뒤에도 공고를 다시 보는가</h3>
+        <p>${esc(r.retentionExplanation)}</p>
+        <div class="retention-pending"><strong>${esc(r.retentionStatus)}</strong><p>${esc(r.retentionExample)}</p></div>
+        ${table(["기준 주", "4주 뒤 확인할 주", "10.15 기준"], r.retentionWindows.map((w) => [esc(w.baseline), esc(w.returnWeek), esc(w.status)]))}
+        <p class="report-note">${esc(r.retentionNote)}</p>
+        ${reportDetails("이전에 확인한 리텐션 · 참고 기록", rich(r.historicalNote) + (u.retentionChart ? figure(u.retentionChart,u.retentionCaption) : ""))}
+      </section>
+      <div class="report-appendix">${reportDetails("집계 제외와 이벤트별 원자료", field("집계 제외",m.exclusion) + field("관측 기록",u.activeData))}<p class="report-source">${link("assets/s2/active-users-wau.pdf","GA4 보고서 원문")}</p></div>
+    </div>`;
   }
 
   function secTech(s) {
@@ -710,6 +886,7 @@
   }
 
   function techBlock(key, t, status) {
+    if (t.report) return backendReport(t, status);
     const isFront = key === "frontend";
     const criteria = criteriaRow(t.criteria);
     const i = t.incident;
@@ -731,26 +908,22 @@
           : empty(isFront ? "완료한 미션 이름" : "수행한 요구사항 이름"),
       )}
       ${criteria}
-      ${field("왜 필요했나", t.why, "왜 지금 우리 팀에 필요했고, 무엇이 나아지길 기대했나")}
-      ${field("무엇을 적용했나", t.applied, "실제 서비스에 적용한 도구와 구성. 확인할 수 있는 화면이나 링크")}
+      ${t.compact ? reportDetails("접근 방식과 배운 점", [
+        field("왜 필요했나", t.why), field("무엇을 적용했나", t.applied),
+        field("왜 이 방식인가", t.choice), field("적용 전후", t.observed), field("알게 된 점", t.learned),
+      ].join("")) : [field("왜 필요했나", t.why), field("무엇을 적용했나", t.applied),
+        field("왜 이 방식인가", t.choice), field("적용 전후", t.observed), field("알게 된 점", t.learned)].join("")}
       ${figures(t.figures)}
-      ${field("왜 이 방식인가", t.choice, "고른 기술과 대안을 비교한 이유")}
-      ${field("적용 전후", t.observed, "적용 전과 후에 달라진 것. 기대와 달랐다면 그 사실도")}
-      ${field("알게 된 점", t.learned, "적용하며 새로 알게 된 것, 예상과 달랐던 점, 운영에 준 영향")}
-      ${(t.extras || [])
-        .filter((x) => filled(x.body) || filled(x.hint)) // hint만 있으면 빈 칸 안내로 보인다
-        .map((x) =>
-          x.table
-            ? row(
-                x.label,
-                `<div class="field-body"><div class="prose">${rich(x.body)}</div>${table(
-                  x.table.head.map(esc),
-                  x.table.rows.map((r) => r.map(cell)),
-                )}${filled(x.after) ? `<div class="prose">${rich(x.after)}</div>` : ""}</div>`,
-              )
-            : field(x.label, x.body, x.hint || ""),
-        )
-        .join("")}
+      ${(t.extras || []).filter((x) => filled(x.body) || filled(x.hint)).map((x) => {
+        const dataTable = x.table ? table(x.table.head.map(esc), x.table.rows.map((r) => r.map(cell))) : "";
+        const evidence = `<div class="prose">${rich(x.body || "")}</div>${dataTable}${filled(x.after) ? `<div class="prose">${rich(x.after)}</div>` : ""}`;
+        return row(x.label, `<div class="field-body">
+          ${t.compact && filled(x.summary) ? `<div class="prose">${rich(x.summary)}</div>` : ""}
+          ${reportVisuals(x.visuals)}${x.comparison ? metricComparison(x.comparison) : ""}
+          ${t.compact && filled(x.summary) ? reportDetails("측정 조건·해석·출처 자세히 보기", evidence) : evidence}
+          ${figures(x.figures)}
+        </div>`);
+      }).join("")}
       ${incident}
       ${linkField(isFront ? "저장소·PR" : "문서", t.doc, isFront ? "저장소·PR 열기" : "문서 열기")}
     </div>`;
@@ -908,6 +1081,24 @@
     go();
   }
 
+  function renderReport(kind) {
+    const isHypothesis = kind === "hypothesis-report";
+    const title = isHypothesis ? "가설 검증 기록" : "유저 데이터 리포트";
+    document.title = `${title} · ${store.site.team}`;
+    const records = Object.values(store.sprints).filter((s) => isHypothesis
+      ? filled(s.hypothesis?.cycles) || filled(s.hypothesis?.hypothesis)
+      : filled(s.userData?.activeData) || filled(s.userData?.coreValue));
+    const stat = (label, value, sub) => `<div class="stat"><div class="stat-label">${label}</div><div class="stat-value">${cell(value)}</div>${sub ? `<div class="stat-sub">${sub}</div>` : ""}</div>`;
+    return `<main class="wrap report-page"><header class="sheader"><p class="eyebrow">예술in · 누적 기록</p><h1>${title}</h1>
+      <p class="lede">스프린트별 정의와 관측을 보존한다. 이후에 바꾼 기준으로 과거 결과를 다시 판정하지 않는다.</p>
+      <p>${link(isHypothesis ? store.site.links.userReport : store.site.links.hypothesisDoc, isHypothesis ? "유저 데이터 리포트 →" : "가설 검증 기록 →")}</p>
+      <nav class="report-jumps" aria-label="스프린트별 기록">${records.map((s) => `<a class="link" href="#sprint-${s.no}">스프린트 ${s.no}</a>`).join("")}</nav></header>
+      ${records.map((s) => `<section class="sec" id="sprint-${s.no}"><h2>스프린트 ${s.no} · ${esc(s.start)} ~ ${esc(s.end)}</h2>
+        <p>${link(`sprint.html?n=${s.no}#hypothesis`, "스프린트 페이지로 →")}</p>
+        ${isHypothesis ? hypothesisRecord(s.hypothesis || {}) : userData(s.userData || {}, { ...store.site.metrics, ...s.userData?.metrics }, s.userData?.wau || [], stat)}
+      </section>`).join("")}</main>${footer()}`;
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     const app = document.getElementById("app");
     const page = document.body.dataset.page;
@@ -921,6 +1112,9 @@
       app.innerHTML = topbar(n) + errors + renderSprint(n);
       setupTabs();
       watchToc();
+      jumpToHash();
+    } else if (page === "hypothesis-report" || page === "user-report") {
+      app.innerHTML = topbar(0) + errors + renderReport(page);
       jumpToHash();
     } else {
       app.innerHTML = topbar(0) + errors + renderHome();
