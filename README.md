@@ -22,8 +22,18 @@
 
 ## 페이지 구성
 
-개요(`index.html`)는 레벨4 방향, 스프린트 목록과 백로그 진행도, 요구사항 승인 현황, 지표 추이, 팀을 보여 준다.
-스프린트 페이지(`sprint.html?n=1`)는 데모데이 발표 순서를 따른다.
+개요(`index.html`)는 레벨4 방향, 팀, 스프린트 목록과 백로그 진행도를 보여 준다.
+스프린트 페이지(`sprint.html?n=1`)는 데모데이 발표 순서를 따르고, 섹션을 상단 탭으로 나눠 보여 준다.
+
+| 탭 | 섹션 |
+| --- | --- |
+| Overview | 1~4 |
+| Product | 5 |
+| Backend | 6 |
+| Soft Skill | 7 |
+| Retro & Coach | 8, 9 |
+
+`data/site.js`의 `layout`을 비우면 예전처럼 한 페이지에 모든 섹션이 보인다. `#user-data`처럼 섹션 안의 주소로 들어오면 그 섹션이 든 탭이 열린다.
 
 1. 한눈에 보기 — 핵심 작업 제목만 모은 목록. 누르면 해당 카드로 이동한다 (`highlights`)
 2. 핵심 작업 — 작업별 담당·상태·내용·관련 PR (`highlights`)
@@ -48,7 +58,11 @@ python -m http.server 5417
 
 ## 배포
 
-Vercel 정적 배포를 쓴다. 이 폴더에서 실행한다.
+Vercel 프로젝트 `yesulin-sprint-log`가 이 저장소(`yesulIn-prototype/woowa-sprint`)와 연결되어 있다. 빌드 단계는 없다.
+
+- `main`에 push하면 운영(https://sprint.yesulin.art)에 자동으로 배포된다.
+- 다른 브랜치에 push하면 미리보기 주소가 만들어진다. 미리보기는 Vercel에 로그인해야 볼 수 있다.
+- 급할 때는 이 폴더에서 CLI로 직접 배포할 수도 있다. 이때도 같은 변경을 `main`에 올려 저장소와 운영을 맞춘다.
 
 ```bash
 vercel deploy --prod
