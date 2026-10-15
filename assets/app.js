@@ -24,7 +24,7 @@
   const STATUS_ORDER = ["완료", "진행 중", "대기", "보류", "취소"];
   const PRIORITY_ORDER = ["P1", "P2", "P3", "기타"];
   const TONE = {
-    완료: "good", 승인: "good", 검증: "good", "운영 중": "good",
+    완료: "good", 승인: "good", 검증: "good", 성공: "good", "유입 확인": "good", "운영 중": "good",
     진행: "active", "진행 중": "active", "컨택 중": "active", 제출: "active",
     "보완 요청": "warn",
     기각: "ink",
@@ -391,7 +391,7 @@
     const sections = [
       ["overview", "한눈에 보기", secOverview(s)],
       ["work", "핵심 작업", secWork(s)],
-      ["focus", "이번 스프린트 초점", secFocus(s)],
+      ["focus", s.overview ? "다음으로 이어갈 것" : "이번 스프린트 초점", secFocus(s)],
       ["product", "동작하는 제품", secProduct(s)],
       ["hypothesis", "가설과 결과", secHypothesis(s)],
       ["tech", "기술 요구사항", secTech(s)],
@@ -514,6 +514,15 @@
 
   // 작업 제목만 모아 두고, 누르면 자세한 내용으로 이동한다.
   function secOverview(s) {
+    if (s.overview) {
+      const o = s.overview;
+      return `<div class="sprint-summary">
+        <h3>${esc(o.title)}</h3><p class="summary-intro">${esc(o.summary)}</p>
+        <div class="summary-outcomes">${o.outcomes.map((v) => `<div><p>${esc(v.label)}</p><strong>${esc(v.value)}</strong><span>${esc(v.detail)}</span></div>`).join("")}</div>
+        <ol class="summary-flow" aria-label="공고를 배우에게 전달하는 흐름">${o.flow.map((step,i) => `<li><span>0${i+1}</span>${esc(step)}</li>`).join("")}</ol>
+        <p class="summary-footnote">10.15까지의 관측 기록 · 비용은 일평균의 월 환산 추정치</p>
+      </div>`;
+    }
     const works = worksOf(s);
     const recruits = recruitsOf(s);
     const items = [
@@ -532,6 +541,12 @@
   function secWork(s) {
     const works = worksOf(s);
     if (!works.length) return empty("데모데이에 공유할 핵심 작업을 담당·상태와 함께 적습니다.");
+    if (s.overview) return `<div class="overview-work">${works.map((h,i) => `<details class="work-record" id="work-${i+1}">
+      <summary><span>${esc(h.title)}</span>${badge(h.status)}</summary>
+      <div class="work-record-body"><p class="work-owner">${esc(h.owner)}</p><p class="work-summary">${esc(h.summary)}</p>
+      <div class="prose">${rich(h.body)}</div>${reportVisuals(h.visuals)}${figures(h.figures)}
+      <div class="report-links">${(h.links || []).map((l) => link(l.url,l.label)).join("")}</div></div>
+    </details>`).join("")}</div>`;
     return works.map((h, i) => highlight(h, i + 1)).join("");
   }
 
@@ -552,6 +567,7 @@
   }
 
   function secFocus(s) {
+    if (s.overview) return `<div class="overview-next">${s.overview.next.map((v) => `<div><h3>${esc(v.title)}</h3><p>${esc(v.body)}</p></div>`).join("")}</div>`;
     const blocks = s.focus || [];
     if (!blocks.length) return empty("스프린트가 열리면 공식 안내의 초점과 우리 팀의 답을 적습니다.");
     return blocks
@@ -566,6 +582,7 @@
 
   function secProduct(s) {
     const pr = s.product || {};
+    if (s.overview) return `<div class="overview-product">${s.overview.changes.map((c) => `<div><h3>${esc(c.title)}</h3><p>${esc(c.body)}</p></div>`).join("")}<p>${link(pr.demo,"yesulin.art에서 보기")}</p></div>`;
     const changes = (pr.changes || []).filter((c) => filled(c.title));
     // 적은 칸만 보여 준다. 이전·이후를 적으면 나란히 비교한다.
     const change = (c) => {
@@ -702,7 +719,7 @@
     // plan이 있으면 사이클을 시작하기 전에 정한 것을 가설 위에 보여 준다.
     const p = h.plan;
     const plan = p
-      ? `<div class="prose hyp-note"><p><strong>사이클 시작 전에 정한 것</strong></p></div>
+      ? `<div class="prose hyp-note"><p><strong>${esc(p.title || "사이클 시작 전에 정한 것")}</strong></p></div>
         ${field("대상", p.target, "누구의 행동을 보는가")}
         ${field("기간", p.period, "언제부터 언제까지 보는가")}
         ${field("행동", p.action, "어떤 행동이 나오면 셀 것인가")}
@@ -758,7 +775,7 @@
     const r = t.report;
     const nf = (value) => Number(value).toLocaleString("ko-KR");
     return `<article class="coach-report backend-report">
-      <div class="report-kicker"><span>${esc(t.topic)}</span>${badge(status)}</div>
+      <div class="report-kicker"><span>${esc(t.topic)}</span>${badge(t.status || status)}</div>
       <section class="report-block">
         <h3>목표 수치를 먼저 정하지 않은 이유</h3>
         <div class="prose">${rich(r.reason)}</div>
@@ -794,8 +811,8 @@
       </section>
       <div class="report-appendix">
         ${reportDetails("측정 조건과 해석 범위", rich(r.conditions) + rich(r.limits))}
-        ${reportDetails(`공식 완료 조건 확인 · ${t.criteria.filter((c) => c.done).length} / ${t.criteria.length}`, criteriaRow(t.criteria))}
-        <p class="report-source">${link(t.doc, "전체 측정 원자료")} · 사전 목표 수치 설정 항목은 미충족으로 기록했다.</p>
+        ${reportDetails(`요구사항 확인 · ${criteriaSummary(t.criteria)}`, criteriaRow(t.criteria))}
+        <p class="report-source">${link(t.doc, "전체 측정 원자료")}</p>
       </div>
     </article>`;
   }
@@ -807,16 +824,16 @@
     const m = { ...store.site.metrics, ...u.metrics };
     const cycles = h.cycles || [];
     const cards = [
-      { value: "31", unit: "/ 57건", label: "공고 재게시 허락", detail: "공고별 누적 연락 기록 · 약 54%" },
-      { value: "+36", unit: "명", label: "학과 소개 전후 알림방 증가", detail: "67 → 103명 · 약 12시간" },
+      { value: "54%", unit: "", label: "공고 재게시 허락률", detail: "31 / 57건 · 팀 기준 30% 통과" },
+      { value: "103", unit: "명", label: "배우가 모인 알림방", detail: "67 → 103명 · 소개 전후 약 12시간" },
     ];
     const recruits = recruitsOf(s);
     return `<article class="coach-report product-report">
       <p class="report-kicker">공고를 확보하고, 배우가 찾아오는 경로를 확인했다</p>
       <div class="product-outcomes">${cards.map((c) => `<div><p>${esc(c.label)}</p><strong>${esc(c.value)}<small>${esc(c.unit)}</small></strong><span>${esc(c.detail)}</span></div>`).join("")}</div>
-      <p class="report-note">두 실험 모두 사전 숫자 기준이 없어 결론은 ‘판정 불가’다. 재게시 허락과 알림방 유입은 관측했지만, 서비스에서 실제 공고를 봤는지는 아직 측정하지 못했다.</p>
+      <p class="report-note">${esc(h.summary)}</p>
       <section class="report-block"><h3>가설 검증 기록</h3>
-        ${cycles.map((c,i) => `<article class="hypothesis-brief"><div class="hypothesis-index">0${i+1}</div><div><h4>${esc(c.title)}</h4><p>${esc(c.summary || c.observation)}</p><p class="hypothesis-verdict">${badge(c.verdict)}<span>자신감 ${c.confidence != null ? `${esc(c.confidence)} / 10` : "미입력"}</span></p>${reportDetails("실험 기록과 근거 사진", cycleFields(c) + figures(c.figures))}</div></article>`).join("")}
+        ${cycles.map((c,i) => `<article class="hypothesis-brief"><div class="hypothesis-index">0${i+1}</div><div><h4>${esc(c.title)}</h4><p>${esc(c.summary || c.observation)}</p><p class="hypothesis-verdict">${badge(c.resultLabel || c.verdict)}<span>자신감 ${c.confidence != null ? `${esc(c.confidence)} / 10` : "미입력"}</span></p>${reportDetails("실험 기록과 근거 사진", cycleFields(c) + figures(c.figures))}</div></article>`).join("")}
       </section>
       <div id="user-data">${userReport(u,m)}</div>
       <section class="report-block" id="recruit"><h3>제품 제출 링크</h3>
@@ -829,6 +846,7 @@
 
   function userReport(u,m) {
     const r = u.report;
+    if (r.compact) return compactUserReport(u,m);
     return `<div class="coach-report user-report">
       <section class="report-block"><h3>유저 데이터 · 이번 스프린트</h3>
         <p class="report-period">${esc(r.period)}</p>
@@ -860,6 +878,21 @@
     </div>`;
   }
 
+  function compactUserReport(u,m) {
+    const r = u.report;
+    return `<div class="coach-report user-report">
+      <section class="report-block"><h3>유저 데이터</h3><p class="report-period">${esc(r.period)}</p>
+        <div class="period-observations" aria-label="GA4 기본 활성 사용자 참고 수치">${r.periods.map((p) => `<div><p>${esc(p.label)}</p><strong>${p.value}<small>명</small></strong><span>${esc(p.note)}</span></div>`).join("")}</div>
+        <p class="report-note">GA4 기본 활성 사용자다. 둘째 주는 4일 누적이며, 팀원·테스트 제외는 확인되지 않았다.</p>
+        <div class="metric-brief"><h4>핵심 지표 · 공고별 당일 열람 도달률</h4>
+          <p>알림방 인원의 <strong>10% 이상이 공유 당일 공고를 확인</strong>하는 것을 팀 기준으로 둔다. 공고가 실제 배우에게 전달되는지 보기 위해서다. 이번에는 일반 링크를 공유해 알림방 유입의 달성 여부를 판정하지 않았다.</p>
+          <h4>재방문 · W+4</h4><p>4주 전 사용자가 다시 왔는지 보는 지표다. 9월 사용자 집단의 10월 재방문은 확인할 수 있으며, 해당 집계는 추가 확인이 필요하다.</p>
+        </div>
+        ${reportDetails("활성 사용자 정의와 집계 근거", field("활성 사용자 정의",r.activeDefinition) + field("핵심 지표",r.metricReason) + field("현재 측정",r.measurement) + field("집계 제외",m.exclusion) + field("관측 기록",u.activeData) + table(["기준 주","4주 뒤 확인할 주","10.15 기준"],r.retentionWindows.map((w) => [esc(w.baseline),esc(w.returnWeek),esc(w.status)])) + rich(r.retentionNote) + rich(r.historicalNote) + figure(u.retentionChart,u.retentionCaption))}
+      </section>
+    </div>`;
+  }
+
   function secTech(s) {
     const t = s.tech || {};
     const keys = enabledFields();
@@ -868,15 +901,21 @@
   }
 
   // 완료 조건 체크리스트. 항목마다 { text, done, evidence }
+  function criteriaSummary(list) {
+    const done = list.filter((c) => c.done).length;
+    const partial = list.filter((c) => !c.done && c.partial).length;
+    return partial ? `충족 ${done} · △ 부분 충족 ${partial}` : `${done} / ${list.length}`;
+  }
+
   function criteriaRow(list) {
     const checks = (list || []).filter((c) => filled(c.text));
     return checks.length
       ? row(
           "완료 조건",
-          `<div class="field-body"><p class="mono small">${checks.filter((c) => c.done).length} / ${checks.length}</p><ul class="checks">${checks
+          `<div class="field-body"><p class="mono small">${criteriaSummary(checks)}</p><ul class="checks">${checks
             .map(
               (c) =>
-                `<li${c.done ? ' class="is-done"' : ""}><span class="check" aria-label="${c.done ? "완료" : "미완"}"></span><span>${inline(c.text)}${
+                `<li${c.done ? ' class="is-done"' : c.partial ? ' class="is-partial"' : ""}><span class="check" aria-label="${c.done ? "완료" : c.partial ? "부분 충족" : "미완"}">${!c.done && c.partial ? "△" : ""}</span><span>${inline(c.text)}${
                   filled(c.evidence) ? `<span class="evidence">${inline(c.evidence)}</span>` : ""
                 }</span></li>`,
             )

@@ -1908,3 +1908,46 @@ figcaption {
 .result-numbers dd { white-space: nowrap; font-size: 21px; }
 .coach-report h4.observation-label { margin: 24px 0 10px; font-size: 14px; color: #687388; }
 .observation-label + .period-observations { margin-top: 0; }
+
+/* S2 제출 요약: 핵심 결과를 먼저 읽고 작업 기록은 같은 화면에서 펼친다. */
+.sprint-summary > h3 { max-width: 760px; font-size: clamp(25px, 3.1vw, 34px); line-height: 1.4; letter-spacing: -.035em; }
+.summary-intro { max-width: 760px; margin: 18px 0 30px; color: #657082; font-size: 16px; line-height: 1.8; }
+.summary-outcomes { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 24px; padding: 28px 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.summary-outcomes > div { min-width: 0; }
+.summary-outcomes p { margin: 0 0 10px; color: #657082; font-size: 13px; }
+.summary-outcomes strong { display: block; color: var(--ink); font-size: clamp(29px,3.2vw,40px); line-height: 1.3; letter-spacing: -.045em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.summary-outcomes span { display: block; margin-top: 10px; color: #747d8b; font-size: 12px; line-height: 1.7; }
+.summary-flow { list-style: none; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; margin: 28px 0 0; padding: 0; }
+.summary-flow li { position: relative; padding: 16px 20px; background: #f6f8fb; border-radius: 8px; font-size: 14px; font-weight: 550; }
+.summary-flow li + li::before { content: "→"; position: absolute; left: -14px; top: 29px; color: #9da8b9; font-size: 13px; }
+.summary-flow span { display: block; color: #8390a4; font-size: 11px; font-weight: 500; margin-bottom: 3px; }
+.summary-footnote { margin: 16px 0 0; color: #858c98; font-size: 12px; }
+.overview-work { border-top: 1px solid var(--rule-strong); }
+.work-record { border-bottom: 1px solid var(--rule); }
+.work-record > summary { display: flex; align-items: center; gap: 16px; padding: 20px 0; list-style: none; cursor: pointer; }
+.work-record > summary::-webkit-details-marker { display: none; }
+.work-record > summary > span:first-child { flex: 1; font-size: 17px; font-weight: 600; color: var(--ink); }
+.work-record > summary::after { content: "+"; width: 20px; text-align: center; color: #8a94a4; font-size: 22px; font-weight: 300; }
+.work-record[open] > summary::after { content: "−"; }
+.work-record-body { padding: 0 0 28px; font-size: 14px; }
+.work-owner { color: var(--muted); font-size: 12px; margin: 0 0 10px; }
+.work-summary { font-size: 16px; font-weight: 550; color: #3b4659; }
+.overview-next { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 36px; }
+.overview-next h3, .overview-product h3 { font-size: 17px; }
+.overview-next p, .overview-product p { font-size: 15px; line-height: 1.8; color: #657082; margin: 10px 0 0; }
+.overview-product > div { margin-bottom: 26px; }
+.metric-brief { margin-top: 26px; }
+.metric-brief h4:not(:first-child) { margin-top: 24px; }
+.metric-brief p { font-size: 14px; line-height: 1.8; color: #657082; margin-bottom: 0; }
+.checks li.is-partial .check { border: 0; color: var(--warn); font-size: 18px; line-height: 17px; }
+@media (max-width: 800px) {
+  .summary-outcomes { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 28px 20px; }
+}
+@media (max-width: 540px) {
+  .summary-flow { gap: 10px; }
+  .summary-flow li { padding: 14px 12px; font-size: 12px; }
+  .summary-flow li + li::before { left: -10px; font-size: 10px; }
+  .overview-next { grid-template-columns: 1fr; gap: 22px; }
+  .work-record > summary { gap: 10px; }
+  .work-record > summary > span:first-child { font-size: 15px; }
+}
