@@ -1940,6 +1940,12 @@ figcaption {
 .metric-brief h4:not(:first-child) { margin-top: 24px; }
 .metric-brief p { font-size: 14px; line-height: 1.8; color: #657082; margin-bottom: 0; }
 .checks li.is-partial .check { border: 0; color: var(--warn); font-size: 18px; line-height: 17px; }
+.review-summary { margin: 0 0 32px; padding: 16px 20px; background: #f6f8fb; border-left: 3px solid var(--accent); font-size: 13px; line-height: 1.7; }
+.review-summary p { margin: 0; color: #657082; }
+.review-summary > div { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 8px 0; color: var(--ink); }
+.sizing-review > p, .resubmission-report > section > p { font-size: 14px; line-height: 1.8; }
+.resubmission-report .period-observations strong { font-size: 36px; }
+.resubmission-report .report-appendix { margin-top: 20px; }
 @media (max-width: 800px) {
   .summary-outcomes { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 28px 20px; }
 }

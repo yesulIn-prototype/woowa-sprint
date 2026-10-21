@@ -1,0 +1,60 @@
+{
+  "checkedAt": "2026-10-21",
+  "source": "GA4 예술in 탐색 분석",
+  "property": "551658773",
+  "metric": [
+    "총 사용자",
+    "조회수"
+  ],
+  "filters": {
+    "hostname": "yesulin.art",
+    "pagePathRegex": "^/posts/[^/]+/?$",
+    "eventName": "page_view"
+  },
+  "internalUsersExcluded": false,
+  "limits": [
+    "운영 화면 조회·개발 도메인 제외. 팀원의 공개 공고 열람은 포함 가능.",
+    "고유 사용자는 GA4 식별 기준이며 실제 사람 수와 다를 수 있음.",
+    "알림방 유입·구성원과 연결할 수 없어 도달률 10% 판정에는 쓰지 않음."
+  ],
+  "weekly": [
+    {
+      "start": "2026-10-05",
+      "end": "2026-10-11",
+      "users": 65,
+      "views": 239
+    },
+    {
+      "start": "2026-10-12",
+      "end": "2026-10-18",
+      "users": 130,
+      "views": 464
+    }
+  ],
+  "postSamples": [
+    {
+      "path": "/posts/14",
+      "sharedAt": "2026-10-06 09:01:54",
+      "date": "2026-10-06",
+      "users": 4,
+      "views": 5
+    },
+    {
+      "path": "/posts/15",
+      "sharedAt": "2026-10-06 09:50:40",
+      "date": "2026-10-06",
+      "users": 4,
+      "views": 6
+    },
+    {
+      "path": "/posts/16",
+      "sharedAt": "2026-10-06 10:41:42",
+      "date": "2026-10-06",
+      "users": 2,
+      "views": 2
+    }
+  ],
+  "sampling": "채팅 CSV의 첫 공개 공고 링크 3개. 공유일 전체를 조회하여 공유 이전 열람이 포함될 수 있음.",
+  "timezone": "Asia/Seoul",
+  "internalTrafficFilterStateOnAudit": "Testing"
+}

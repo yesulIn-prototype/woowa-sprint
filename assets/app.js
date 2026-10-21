@@ -517,6 +517,7 @@
     if (s.overview) {
       const o = s.overview;
       return `<div class="sprint-summary">
+        ${s.review ? `<div class="review-summary"><p>${esc(s.review.date)} · 코치 피드백</p><div><span>백엔드 ${badge(submissionStatus(s,"backend"))}</span><span>소프트스킬 ${badge(submissionStatus(s,"softskill"))}</span><span>제품 ${badge(submissionStatus(s,"product"))}</span></div><p>${esc(s.review.summary)}</p></div>` : ""}
         <h3>${esc(o.title)}</h3><p class="summary-intro">${esc(o.summary)}</p>
         <div class="summary-outcomes">${o.outcomes.map((v) => `<div><p>${esc(v.label)}</p><strong>${esc(v.value)}</strong><span>${esc(v.detail)}</span></div>`).join("")}</div>
         <ol class="summary-flow" aria-label="공고를 배우에게 전달하는 흐름">${o.flow.map((step,i) => `<li><span>0${i+1}</span>${esc(step)}</li>`).join("")}</ol>
@@ -777,13 +778,14 @@
     return `<article class="coach-report backend-report">
       <div class="report-kicker"><span>${esc(t.topic)}</span>${badge(t.status || status)}</div>
       <section class="report-block">
-        <h3>목표 수치를 먼저 정하지 않은 이유</h3>
+        <h3>${esc(r.reasonTitle || "목표 수치를 먼저 정하지 않은 이유")}</h3>
         <div class="prose">${rich(r.reason)}</div>
+        ${r.approvalNote ? `<p class="report-note">${esc(r.approvalNote)}</p>` : ""}
       </section>
       <section class="report-block">
         <h3>부하 테스트 전후</h3>
         <p class="report-lead">${inline(r.beforeAfter)}</p>
-        <figure class="load-results" aria-label="개선 전 100RPS와 개선 후 400RPS의 요청 결과 비교">
+        <figure class="load-results" aria-label="${esc(r.runs.map((run) => `${run.label} ${run.rps}RPS`).join('와 '))} 요청 결과 비교">
           <div class="load-result-grid">${r.runs.map((run, i) => {
             const failRate = run.failed / run.total * 100;
             return `<div class="load-result${i ? " is-after" : ""}">
@@ -809,6 +811,11 @@
         <h3>동작과 DB 변경 검증</h3>
         <div class="report-proof-grid">${r.verification.map((v) => `<div><h4>${esc(v.title)}</h4><p>${esc(v.body)}</p><div class="report-links">${v.links.map((l) => link(l.url,l.label)).join("")}</div></div>`).join("")}</div>
       </section>
+      ${r.sizing ? `<section class="report-block sizing-review"><h3>${esc(r.sizing.title)}</h3><p>${esc(r.sizing.note)}</p>
+        ${table(["확인할 지표","축소 후 유지 조건","보류·복구 판단"],r.sizing.rules.map((v) => [esc(v.metric),esc(v.accept),esc(v.stop)]))}
+        <p class="report-note">${esc(r.sizing.evidence)}</p>
+        ${reportDetails("10.19 후속 조치 · PROD 앱 micro 전환", `<p>${esc(r.sizing.followup)}</p><p>${link(r.sizing.url,"사양 변경 작업 기록")}</p>`)}
+      </section>` : ""}
       <div class="report-appendix">
         ${reportDetails("측정 조건과 해석 범위", rich(r.conditions) + rich(r.limits))}
         ${reportDetails(`요구사항 확인 · ${criteriaSummary(t.criteria)}`, criteriaRow(t.criteria))}
@@ -825,11 +832,11 @@
     const cycles = h.cycles || [];
     const cards = [
       { value: "54%", unit: "", label: "공고 재게시 허락률", detail: "31 / 57건 · 팀 기준 30% 통과" },
-      { value: "103", unit: "명", label: "배우가 모인 알림방", detail: "67 → 103명 · 소개 전후 약 12시간" },
+      { value: s.review ? "104" : "103", unit: "명", label: "배우가 모인 알림방", detail: s.review ? "10.15 기준 · 학과 소개 67 → 103명" : "67 → 103명 · 소개 전후 약 12시간" },
     ];
     const recruits = recruitsOf(s);
     return `<article class="coach-report product-report">
-      <p class="report-kicker">공고를 확보하고, 배우가 찾아오는 경로를 확인했다</p>
+      <div class="report-kicker"><span>공고를 확보하고, 배우가 찾아오는 경로를 확인했다</span>${badge(submissionStatus(s,"product"))}</div>
       <div class="product-outcomes">${cards.map((c) => `<div><p>${esc(c.label)}</p><strong>${esc(c.value)}<small>${esc(c.unit)}</small></strong><span>${esc(c.detail)}</span></div>`).join("")}</div>
       <p class="report-note">${esc(h.summary)}</p>
       <section class="report-block"><h3>가설 검증 기록</h3>
@@ -838,7 +845,7 @@
       <div id="user-data">${userReport(u,m)}</div>
       <section class="report-block" id="recruit"><h3>제품 제출 링크</h3>
         <nav class="report-links submission-links" aria-label="제품 제출 문서">${link(store.site.links.hypothesisDoc, "가설 검증 기록")}${link(store.site.links.userReport, "유저 데이터 리포트")}${link(p.landing, "서비스 · yesulin.art")}</nav>
-        <p class="report-note">서비스 주소는 비로그인으로 열리지만, 첫 화면에 소개·사용 순서·시작하기를 갖추는 보완이 남아 있다. 두 누적 문서는 배포 후 코치 접근을 확인한다.</p>
+        <p class="report-note">${esc(p.note)}</p>
         ${reportDetails("그 밖의 사용자 모집 활동", table(["활동", "관측", "다음 행동"], recruits.map((r) => [inline(r.title), cell(r.metric), cell(r.next)])))}
       </section>
     </article>`;
@@ -880,6 +887,7 @@
 
   function compactUserReport(u,m) {
     const r = u.report;
+    if (r.resubmission) return resubmissionUserReport(u,m);
     return `<div class="coach-report user-report">
       <section class="report-block"><h3>유저 데이터</h3><p class="report-period">${esc(r.period)}</p>
         <div class="period-observations" aria-label="GA4 기본 활성 사용자 참고 수치">${r.periods.map((p) => `<div><p>${esc(p.label)}</p><strong>${p.value}<small>명</small></strong><span>${esc(p.note)}</span></div>`).join("")}</div>
@@ -890,6 +898,29 @@
         </div>
         ${reportDetails("활성 사용자 정의와 집계 근거", field("활성 사용자 정의",r.activeDefinition) + field("핵심 지표",r.metricReason) + field("현재 측정",r.measurement) + field("집계 제외",m.exclusion) + field("관측 기록",u.activeData) + table(["기준 주","4주 뒤 확인할 주","10.15 기준"],r.retentionWindows.map((w) => [esc(w.baseline),esc(w.returnWeek),esc(w.status)])) + rich(r.retentionNote) + rich(r.historicalNote) + figure(u.retentionChart,u.retentionCaption))}
       </section>
+    </div>`;
+  }
+
+  function resubmissionUserReport(u,m) {
+    const r = u.report;
+    const v = r.resubmission;
+    const number = (n) => n == null ? "확인 대기" : Number(n).toLocaleString("ko-KR");
+    return `<div class="coach-report user-report resubmission-report">
+      <section class="report-block"><h3>유저 데이터 · 재제출 보완</h3>
+        <p class="report-period">${esc(v.checkedAt)}</p>
+        <p>${esc(r.activeDefinition)}</p>
+        <h4 class="observation-label">관측값 · 팀원 제외 확인 전</h4>
+        <div class="period-observations" aria-label="공고 상세 주간 고유 열람자">${v.periods.map((p) => `<div><p>${esc(p.label)}</p><strong>${p.users == null ? "집계 대기" : number(p.users)}${p.users == null ? "" : "<small>명</small>"}</strong><span>${esc(p.note)}</span></div>`).join("")}</div>
+        <p class="report-note">${esc(v.exclusion)}</p>
+      </section>
+      <section class="report-block"><h3>핵심 지표 · 공고별 당일 고유 열람자</h3>
+        <p>${esc(v.definitionChange)}</p>
+        ${table(["공고","공유 시각","당일 고유 열람자","조회수"],v.posts.map((p) => [p.url ? link(p.url,p.title) : esc(p.title),esc(p.date),p.users == null ? "집계 대기" : `${number(p.users)}명`,p.views == null ? "집계 대기" : `${number(p.views)}회`]))}
+        <p class="report-note">${esc(v.attributionNote)}</p>
+      </section>
+      <div class="report-appendix">${reportDetails("집계 조건과 근거",rich(v.method) + rich(v.scopeNote) + field("재방문 · W+4",r.retentionStatus) + rich(v.serverLogNote))}
+        ${v.chatFollowup ? reportDetails("스프린트 이후 · 10.21 알림방 입장 추이", `<p>${esc(v.chatFollowup.note)}</p>${figure(v.chatFollowup.src,v.chatFollowup.caption)}`) : ""}
+      </div>
     </div>`;
   }
 
