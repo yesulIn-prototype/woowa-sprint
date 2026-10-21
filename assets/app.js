@@ -376,6 +376,7 @@
 
   // 요구사항별 LMS+ 제출·승인 상태
   function submissionStatus(s, key) {
+    if (s.presentation?.hideSubmissionStatus) return "";
     if (key in FIELD_NAME && !store.site.fields?.[key]) return "해당 없음";
     return s.submission?.status?.[key] || "제출 전";
   }
@@ -517,7 +518,7 @@
     if (s.overview) {
       const o = s.overview;
       return `<div class="sprint-summary">
-        ${s.review ? `<div class="review-summary"><p>${esc(s.review.date)} · 코치 피드백</p><div><span>백엔드 ${badge(submissionStatus(s,"backend"))}</span><span>소프트스킬 ${badge(submissionStatus(s,"softskill"))}</span><span>제품 ${badge(submissionStatus(s,"product"))}</span></div><p>${esc(s.review.summary)}</p></div>` : ""}
+        ${s.review && !s.presentation?.hideSubmissionStatus ? `<div class="review-summary"><p>${esc(s.review.date)} · 코치 피드백</p><div><span>백엔드 ${badge(submissionStatus(s,"backend"))}</span><span>소프트스킬 ${badge(submissionStatus(s,"softskill"))}</span><span>제품 ${badge(submissionStatus(s,"product"))}</span></div><p>${esc(s.review.summary)}</p></div>` : ""}
         <h3>${esc(o.title)}</h3><p class="summary-intro">${esc(o.summary)}</p>
         <div class="summary-outcomes">${o.outcomes.map((v) => `<div><p>${esc(v.label)}</p><strong>${esc(v.value)}</strong><span>${esc(v.detail)}</span></div>`).join("")}</div>
         <ol class="summary-flow" aria-label="공고를 배우에게 전달하는 흐름">${o.flow.map((step,i) => `<li><span>0${i+1}</span>${esc(step)}</li>`).join("")}</ol>
@@ -776,7 +777,7 @@
     const r = t.report;
     const nf = (value) => Number(value).toLocaleString("ko-KR");
     return `<article class="coach-report backend-report">
-      <div class="report-kicker"><span>${esc(t.topic)}</span>${badge(t.status || status)}</div>
+      <div class="report-kicker"><span>${esc(t.topic)}</span>${badge(status)}</div>
       <section class="report-block">
         <h3>${esc(r.reasonTitle || "목표 수치를 먼저 정하지 않은 이유")}</h3>
         <div class="prose">${rich(r.reason)}</div>
@@ -852,8 +853,8 @@
         ${cycles.map((c,i) => `<article class="hypothesis-brief"><div class="hypothesis-index">0${i+1}</div><div><h4>${esc(c.title)}</h4><p>${esc(c.summary || c.observation)}</p><p class="hypothesis-verdict">${badge(c.resultLabel || c.verdict)}<span>자신감 ${c.confidence != null ? `${esc(c.confidence)} / 10` : "미입력"}</span></p>${reportDetails("실험 기록과 근거 사진", cycleFields(c) + figures(c.figures))}</div></article>`).join("")}
       </section>
       <div id="user-data">${userReport(u,m)}</div>
-      <section class="report-block" id="recruit"><h3>제품 제출 링크</h3>
-        <nav class="report-links submission-links" aria-label="제품 제출 문서">${link(store.site.links.hypothesisDoc, "가설 검증 기록")}${link(store.site.links.userReport, "유저 데이터 리포트")}${link(p.landing, "서비스 · yesulin.art")}</nav>
+      <section class="report-block" id="recruit"><h3>관련 기록과 서비스</h3>
+        <nav class="report-links submission-links" aria-label="제품 관련 문서와 서비스">${link(store.site.links.hypothesisDoc, "가설 검증 기록")}${link(store.site.links.userReport, "유저 데이터 리포트")}${link(p.landing, "서비스 · yesulin.art")}</nav>
         <p class="report-note">${esc(p.note)}</p>
         ${reportDetails("그 밖의 사용자 모집 활동", table(["활동", "관측", "다음 행동"], recruits.map((r) => [inline(r.title), cell(r.metric), cell(r.next)])))}
       </section>
@@ -915,7 +916,7 @@
     const v = r.resubmission;
     const number = (n) => n == null ? "확인 대기" : Number(n).toLocaleString("ko-KR");
     return `<div class="coach-report user-report resubmission-report">
-      <section class="report-block"><h3>유저 데이터 · 재제출 보완</h3>
+      <section class="report-block"><h3>유저 데이터</h3>
         <p class="report-period">${esc(v.checkedAt)}</p>
         <p>${esc(r.activeDefinition)}</p>
         <h4 class="observation-label">관측값 · 팀원 제외 확인 전</h4>
