@@ -33,28 +33,28 @@
   ],
   "postSamples": [
     {
-      "path": "/posts/14",
-      "sharedAt": "2026-10-06 09:01:54",
-      "date": "2026-10-06",
-      "users": 4,
-      "views": 5
+      "path": "/posts/85",
+      "sharedAt": "2026-10-16 11:08:07",
+      "date": "2026-10-16",
+      "users": 14,
+      "views": 19
     },
     {
-      "path": "/posts/15",
-      "sharedAt": "2026-10-06 09:50:40",
-      "date": "2026-10-06",
-      "users": 4,
-      "views": 6
+      "path": "/posts/89",
+      "sharedAt": "2026-10-16 18:51:27",
+      "date": "2026-10-16",
+      "users": 3,
+      "views": 3
     },
     {
-      "path": "/posts/16",
-      "sharedAt": "2026-10-06 10:41:42",
-      "date": "2026-10-06",
-      "users": 2,
-      "views": 2
+      "path": "/posts/88",
+      "sharedAt": "2026-10-16 18:51:46",
+      "date": "2026-10-16",
+      "users": 6,
+      "views": 7
     }
   ],
-  "sampling": "채팅 CSV의 첫 공개 공고 링크 3개. 공유일 전체를 조회하여 공유 이전 열람이 포함될 수 있음.",
+  "sampling": "10월 16일 알림방에 공유한 공고 3개 전체. 공유일 00:00~23:59 KST를 조회하여 공유 이전 열람이 포함될 수 있음.",
   "timezone": "Asia/Seoul",
   "internalTrafficFilterStateOnAudit": "Testing"
 }

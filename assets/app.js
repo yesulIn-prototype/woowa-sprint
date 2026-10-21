@@ -802,6 +802,16 @@
         </figure>
         <p class="report-note">${inline(r.boundary)}</p>
       </section>
+      ${r.operatingLoad ? `<section class="report-block operating-load"><h3>운영 요청량과 micro의 처리 여유</h3>
+        <p class="report-period">${esc(r.operatingLoad.period)}</p>
+        <div class="capacity-outcomes">
+          ${[{label:"기록 요청의 기간 평균",value:r.operatingLoad.averageRps,note:"PROD small 운영"},{label:"가장 바빴던 1분의 평균",value:r.operatingLoad.peakMinuteRps,note:r.operatingLoad.peakAt || "순간 최대 RPS와 구분"},{label:"부하 테스트에서 확인",value:400,note:"DEV micro · 60초 · 오류 0건"}].map((v) => `<div><p>${esc(v.label)}</p><strong>${v.value == null ? "조회 대기" : Number(v.value).toLocaleString("ko-KR",{maximumFractionDigits:Number(v.value) < 1 ? 3 : 2})}${v.value == null ? "" : "<small>RPS</small>"}</strong><span>${esc(v.note)}</span></div>`).join("")}
+        </div>
+        <p class="report-note">${esc(r.operatingLoad.sourceNote)}</p>
+        ${r.operatingLoad.conclusion ? `<p>${esc(r.operatingLoad.conclusion)}</p>` : ""}
+        ${figure(r.operatingLoad.chart,r.operatingLoad.chartCaption)}
+        ${reportDetails("추가 근거 · small 운영 당시 CPU", figure(r.operatingLoad.cpuImage,r.operatingLoad.cpuCaption) + `<p>${esc(r.operatingLoad.cpuReading)}</p>`)}
+      </section>` : ""}
       <section class="report-block">
         <h3>무엇을 바꿨나</h3>
         <ol class="report-changes">${r.changes.map((c) => `<li><h4>${esc(c.title)}</h4><p>${esc(c.body)}</p></li>`).join("")}</ol>
@@ -812,9 +822,8 @@
         <div class="report-proof-grid">${r.verification.map((v) => `<div><h4>${esc(v.title)}</h4><p>${esc(v.body)}</p><div class="report-links">${v.links.map((l) => link(l.url,l.label)).join("")}</div></div>`).join("")}</div>
       </section>
       ${r.sizing ? `<section class="report-block sizing-review"><h3>${esc(r.sizing.title)}</h3><p>${esc(r.sizing.note)}</p>
-        ${table(["확인할 지표","축소 후 유지 조건","보류·복구 판단"],r.sizing.rules.map((v) => [esc(v.metric),esc(v.accept),esc(v.stop)]))}
-        <p class="report-note">${esc(r.sizing.evidence)}</p>
-        ${reportDetails("10.19 후속 조치 · PROD 앱 micro 전환", `<p>${esc(r.sizing.followup)}</p><p>${link(r.sizing.url,"사양 변경 작업 기록")}</p>`)}
+        ${r.sizing.rules?.length ? table(["확인할 지표","축소 후 유지 조건","보류·복구 판단"],r.sizing.rules.map((v) => [esc(v.metric),esc(v.accept),esc(v.stop)])) : ""}
+        ${reportDetails("10.19 후속 조치 · PROD 앱 micro 전환", `<p>${esc(r.sizing.evidence)}</p><p>${esc(r.sizing.followup)}</p><p>${link(r.sizing.url,"사양 변경 작업 기록")}</p>`)}
       </section>` : ""}
       <div class="report-appendix">
         ${reportDetails("측정 조건과 해석 범위", rich(r.conditions) + rich(r.limits))}

@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-10-21",
+  "source": "CloudWatch console CSV export",
+  "namespace": "AWS/ApplicationELB",
+  "metric": "RequestCount",
+  "statistic": "Sum",
+  "periodSeconds": 60,
+  "dimensions": {
+    "LoadBalancer": "yesulin-backend-alb",
+    "TargetGroup": "yesulin-backend-prod-tg"
+  },
+  "start": "2026-10-15T00:00:00+09:00",
+  "endExclusive": "2026-10-17T00:00:00+09:00",
+  "environment": "PROD application small, one instance",
+  "exportStatus": "Complete",
+  "reportedMinutes": 2862,
+  "blankMinutes": 18,
+  "recordedRequests": 11497,
+  "periodAverageRps": 0.06653356481481482,
+  "maxMinute": {
+    "at": "2026-10-15T11:40:00+09:00",
+    "requests": 197,
+    "averageRps": 3.283333333333333
+  },
+  "series": "prod-request-count-20261015-16.csv",
+  "limits": [
+    "18 blank minute cells are kept blank, not replaced with measured zero.",
+    "Period average is recorded request sum divided by the full 172800 seconds.",
+    "Includes all requests selected for the PROD target group, not unique users.",
+    "Maximum one-minute average is not instantaneous peak RPS.",
+    "Metrics were checked after the sizing decision."
+  ]
+}

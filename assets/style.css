@@ -1944,6 +1944,13 @@ figcaption {
 .review-summary p { margin: 0; color: #657082; }
 .review-summary > div { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 8px 0; color: var(--ink); }
 .sizing-review > p, .resubmission-report > section > p { font-size: 14px; line-height: 1.8; }
+.capacity-outcomes { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; padding: 24px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.capacity-outcomes p, .capacity-outcomes span { color: #747d8b; font-size: 12px; line-height: 1.7; }
+.capacity-outcomes p { margin: 0 0 8px; }
+.capacity-outcomes strong { display: block; color: var(--ink); font-size: 32px; line-height: 1.4; font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
+.capacity-outcomes small { margin-left: 5px; font-size: 12px; font-weight: 500; color: #747d8b; }
+.capacity-outcomes span { display: block; margin-top: 8px; }
+@media (max-width: 580px) { .capacity-outcomes { grid-template-columns: 1fr; gap: 18px; } }
 .resubmission-report .period-observations strong { font-size: 36px; }
 .resubmission-report .report-appendix { margin-top: 20px; }
 @media (max-width: 800px) {
