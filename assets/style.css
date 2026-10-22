@@ -1950,7 +1950,8 @@ figcaption {
 .capacity-outcomes strong { display: block; color: var(--ink); font-size: 32px; line-height: 1.4; font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
 .capacity-outcomes small { margin-left: 5px; font-size: 12px; font-weight: 500; color: #747d8b; }
 .capacity-outcomes span { display: block; margin-top: 8px; }
-@media (max-width: 580px) { .capacity-outcomes { grid-template-columns: 1fr; gap: 18px; } }
+.openchat-trend .capacity-outcomes { grid-template-columns: repeat(2,minmax(0,1fr)); }
+@media (max-width: 580px) { .capacity-outcomes, .openchat-trend .capacity-outcomes { grid-template-columns: 1fr; gap: 18px; } }
 .resubmission-report .period-observations strong { font-size: 36px; }
 .resubmission-report .report-appendix { margin-top: 20px; }
 @media (max-width: 800px) {

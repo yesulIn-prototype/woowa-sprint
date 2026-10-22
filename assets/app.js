@@ -925,6 +925,7 @@
       </section>
       <section class="report-block"><h3>핵심 지표 · 공고별 당일 고유 열람자</h3>
         <p>${esc(v.definitionChange)}</p>
+        ${v.postAudience ? `<p class="report-period">${inline(v.postAudience)}</p>` : ""}
         ${table(["공고","공유 시각","당일 고유 열람자","조회수"],v.posts.map((p) => [p.url ? link(p.url,p.title) : esc(p.title),esc(p.date),p.users == null ? "집계 대기" : `${number(p.users)}명`,p.views == null ? "집계 대기" : `${number(p.views)}회`]))}
         <p class="report-note">${esc(v.attributionNote)}</p>
       </section>
@@ -932,7 +933,6 @@
         <p class="report-period">${esc(v.chatTrend.period)}</p>
         <div class="capacity-outcomes" aria-label="알림방 입장 집계">
           <div><p>누적 입장 기록</p><strong>${number(v.chatTrend.entries)}<small>건</small></strong></div>
-          <div><p>구분 가능한 닉네임</p><strong>${number(v.chatTrend.nicknames)}<small>종</small></strong></div>
           <div><p>하루 최다 입장</p><strong>${number(v.chatTrend.peakEntries)}<small>건</small></strong><span>${esc(v.chatTrend.peakDate)}</span></div>
         </div>
         ${figure(v.chatTrend.src,v.chatTrend.caption)}

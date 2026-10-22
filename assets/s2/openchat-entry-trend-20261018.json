@@ -5,9 +5,7 @@
   "endInclusive": "2026-10-18T23:59:59",
   "timezone": "CSV original dates, interpreted as Asia/Seoul",
   "operatorFirstEntryExcluded": 1,
-  "unknownNicknameEntries": 1,
   "totalEntries": 124,
-  "distinctNicknames": 81,
   "peakDay": {
     "date": "2026-10-14",
     "entries": 32
@@ -15,140 +13,112 @@
   "limits": [
     "First day is a partial record.",
     "Entries include re-entries and are not current membership.",
-    "Exact nickname text is not a stable person identifier.",
-    "Unknown nickname entries count only toward entry totals.",
     "Entries do not measure post readership."
   ],
   "daily": [
     {
       "date": "2026-09-23",
-      "entries": 30,
-      "distinctNicknames": 26
+      "entries": 30
     },
     {
       "date": "2026-09-24",
-      "entries": 6,
-      "distinctNicknames": 5
+      "entries": 6
     },
     {
       "date": "2026-09-25",
-      "entries": 0,
-      "distinctNicknames": 0
+      "entries": 0
     },
     {
       "date": "2026-09-26",
-      "entries": 1,
-      "distinctNicknames": 1
+      "entries": 1
     },
     {
       "date": "2026-09-27",
-      "entries": 2,
-      "distinctNicknames": 2
+      "entries": 2
     },
     {
       "date": "2026-09-28",
-      "entries": 0,
-      "distinctNicknames": 0
+      "entries": 0
     },
     {
       "date": "2026-09-29",
-      "entries": 0,
-      "distinctNicknames": 0
+      "entries": 0
     },
     {
       "date": "2026-09-30",
-      "entries": 1,
-      "distinctNicknames": 1
+      "entries": 1
     },
     {
       "date": "2026-10-01",
-      "entries": 1,
-      "distinctNicknames": 1
+      "entries": 1
     },
     {
       "date": "2026-10-02",
-      "entries": 0,
-      "distinctNicknames": 0
+      "entries": 0
     },
     {
       "date": "2026-10-03",
-      "entries": 1,
-      "distinctNicknames": 1
+      "entries": 1
     },
     {
       "date": "2026-10-04",
-      "entries": 5,
-      "distinctNicknames": 5
+      "entries": 5
     },
     {
       "date": "2026-10-05",
-      "entries": 15,
-      "distinctNicknames": 13
+      "entries": 15
     },
     {
       "date": "2026-10-06",
-      "entries": 3,
-      "distinctNicknames": 3
+      "entries": 3
     },
     {
       "date": "2026-10-07",
-      "entries": 6,
-      "distinctNicknames": 6
+      "entries": 6
     },
     {
       "date": "2026-10-08",
-      "entries": 2,
-      "distinctNicknames": 2
+      "entries": 2
     },
     {
       "date": "2026-10-09",
-      "entries": 0,
-      "distinctNicknames": 0
+      "entries": 0
     },
     {
       "date": "2026-10-10",
-      "entries": 1,
-      "distinctNicknames": 1
+      "entries": 1
     },
     {
       "date": "2026-10-11",
-      "entries": 3,
-      "distinctNicknames": 3
+      "entries": 3
     },
     {
       "date": "2026-10-12",
-      "entries": 0,
-      "distinctNicknames": 0
+      "entries": 0
     },
     {
       "date": "2026-10-13",
-      "entries": 0,
-      "distinctNicknames": 0
+      "entries": 0
     },
     {
       "date": "2026-10-14",
-      "entries": 32,
-      "distinctNicknames": 27
+      "entries": 32
     },
     {
       "date": "2026-10-15",
-      "entries": 9,
-      "distinctNicknames": 9
+      "entries": 9
     },
     {
       "date": "2026-10-16",
-      "entries": 4,
-      "distinctNicknames": 3
+      "entries": 4
     },
     {
       "date": "2026-10-17",
-      "entries": 2,
-      "distinctNicknames": 2
+      "entries": 2
     },
     {
       "date": "2026-10-18",
-      "entries": 0,
-      "distinctNicknames": 0
+      "entries": 0
     }
   ]
 }

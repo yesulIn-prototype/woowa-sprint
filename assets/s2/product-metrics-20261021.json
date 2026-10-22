@@ -37,24 +37,48 @@
       "sharedAt": "2026-10-16 11:08:07",
       "date": "2026-10-16",
       "users": 14,
-      "views": 19
+      "views": 19,
+      "roomMembership": {
+        "members": 107,
+        "entryNotices": 122,
+        "exitNotices": 15
+      }
     },
     {
       "path": "/posts/89",
       "sharedAt": "2026-10-16 18:51:27",
       "date": "2026-10-16",
       "users": 3,
-      "views": 3
+      "views": 3,
+      "roomMembership": {
+        "members": 107,
+        "entryNotices": 123,
+        "exitNotices": 16
+      }
     },
     {
       "path": "/posts/88",
       "sharedAt": "2026-10-16 18:51:46",
       "date": "2026-10-16",
       "users": 6,
-      "views": 7
+      "views": 7,
+      "roomMembership": {
+        "members": 107,
+        "entryNotices": 123,
+        "exitNotices": 16
+      }
     }
   ],
   "sampling": "10월 16일 알림방에 공유한 공고 3개 전체. 공유일 00:00~23:59 KST를 조회하여 공유 이전 열람이 포함될 수 있음.",
   "timezone": "Asia/Seoul",
-  "internalTrafficFilterStateOnAudit": "Testing"
+  "internalTrafficFilterStateOnAudit": "Testing",
+  "roomMembershipMethod": {
+    "source": "User-provided open-chat CSV",
+    "sourceSha256": "41092216050d7153bbcb3712fc270ca37fed47b04d5377c93c39be37b5d4ca20",
+    "initialMembers": 0,
+    "initialMembersConfirmedBy": "User confirmed no participants before CSV start on 2026-09-23",
+    "formula": "Initial members + entry notices through sharedAt - exit notices through sharedAt",
+    "operatorAndTeamIncluded": true,
+    "readershipAttributionAvailable": false
+  }
 }
