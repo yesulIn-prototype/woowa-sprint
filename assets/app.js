@@ -928,8 +928,17 @@
         ${table(["공고","공유 시각","당일 고유 열람자","조회수"],v.posts.map((p) => [p.url ? link(p.url,p.title) : esc(p.title),esc(p.date),p.users == null ? "집계 대기" : `${number(p.users)}명`,p.views == null ? "집계 대기" : `${number(p.views)}회`]))}
         <p class="report-note">${esc(v.attributionNote)}</p>
       </section>
-      <div class="report-appendix">${reportDetails("집계 조건과 근거",rich(v.method) + rich(v.scopeNote) + field("재방문 · W+4",r.retentionStatus) + rich(v.serverLogNote))}
-        ${v.chatFollowup ? reportDetails("스프린트 이후 · 10.21 알림방 입장 추이", `<p>${esc(v.chatFollowup.note)}</p>${figure(v.chatFollowup.src,v.chatFollowup.caption)}`) : ""}
+      ${v.chatTrend ? `<section class="report-block openchat-trend" id="openchat-trend"><h3>알림방 입장 추이</h3>
+        <p class="report-period">${esc(v.chatTrend.period)}</p>
+        <div class="capacity-outcomes" aria-label="알림방 입장 집계">
+          <div><p>누적 입장 기록</p><strong>${number(v.chatTrend.entries)}<small>건</small></strong></div>
+          <div><p>구분 가능한 닉네임</p><strong>${number(v.chatTrend.nicknames)}<small>종</small></strong></div>
+          <div><p>하루 최다 입장</p><strong>${number(v.chatTrend.peakEntries)}<small>건</small></strong><span>${esc(v.chatTrend.peakDate)}</span></div>
+        </div>
+        ${figure(v.chatTrend.src,v.chatTrend.caption)}
+        <p class="report-note">${esc(v.chatTrend.note)}</p>
+      </section>` : ""}
+      <div class="report-appendix">${reportDetails("집계 조건과 근거",rich(v.method) + rich(v.scopeNote) + field("재방문 · W+4",r.retentionStatus) + rich(v.serverLogNote) + (v.chatTrend ? field("알림방 입장 집계",v.chatTrend.method) : ""))}
       </div>
     </div>`;
   }
