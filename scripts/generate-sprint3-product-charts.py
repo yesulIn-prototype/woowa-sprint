@@ -36,24 +36,28 @@ def wau():
 
 def retention():
     source = DATA['siteFirstTouchCohorts']
-    cohorts = [c for c in source['cohorts'] if c['start'] in source['completedWeek4CohortStarts']]
-    base = sum(c['size'] for c in cohorts)
-    retained = [base] + [sum(c['returns'][i] for c in cohorts) for i in range(4)]
+    display = source['displayCohort']
+    cohort = next(c for c in source['cohorts'] if c['start'] == display['start'])
+    base = cohort['size']
+    retained = [base] + cohort['returns'][:4]
     left, right, top, bottom = 78, 900, 46, 250
     x = lambda week: left + (right-left)*week/4
     y = lambda n: bottom - (bottom-top)*n/base
-    parts = canvas('사이트 첫 방문 코호트의 4주 리텐션, 참고 지표', f'8월 25일부터 9월 26일까지 첫 방문한 동일한 {base}명을 추적한다. W0 {base}명, W1 {retained[1]}명, W2 {retained[2]}명, W3 {retained[3]}명, W4 {retained[4]}명. 공고 열람 사용자 기준 리텐션과 다르다.')
-    parts += ['<text x="8" y="20">복귀율</text>']
+    parts = canvas('9월 27일부터 10월 3일 첫 방문 집단의 리텐션', f'동일한 {base}명을 추적한다. W0 {base}명, W1 {retained[1]}명, W2 {retained[2]}명, W3 {retained[3]}명, W4 {retained[4]}명. W4는 10월 25일부터 31일까지 중 28일까지 관측한 잠정값이다. 사이트 재방문 기준으로 공고 열람 리텐션과 구분한다.')
+    parts += ['<rect x="835" y="28" width="105" height="300" rx="8" fill="#f2f5fa"/>', '<text x="8" y="20">복귀율</text>']
     for percent in [0, 25, 50, 75, 100]:
         yy = bottom - (bottom-top)*percent/100
         parts += [f'<line x1="{left}" x2="{right}" y1="{yy}" y2="{yy}" stroke="#e9edf2"/>', f'<text x="64" y="{yy+5}" text-anchor="end">{percent}%</text>']
-    points = ' '.join(f'{x(i)},{y(n)}' for i,n in enumerate(retained))
+    points = ' '.join(f'{x(i)},{y(n)}' for i,n in enumerate(retained[:4]))
     parts += [f'<polyline points="{points}" fill="none" stroke="#246bfe" stroke-width="3"/>']
+    parts += [f'<line x1="{x(3)}" y1="{y(retained[3])}" x2="{x(4)}" y2="{y(retained[4])}" stroke="#246bfe" stroke-width="3" stroke-dasharray="6 5"/>']
     for i,n in enumerate(retained):
         percent = 100*n/base
         label_x = x(i) + 14 if i == 0 else x(i)
         anchor = 'start' if i == 0 else 'middle'
-        parts += [f'<circle cx="{x(i)}" cy="{y(n)}" r="5" fill="#246bfe"/>', f'<text x="{label_x}" y="{y(n)-12}" text-anchor="{anchor}" fill="#173a85" font-size="18" font-weight="600">{percent:g}%</text>', f'<text x="{x(i)}" y="282" text-anchor="middle" fill="#252d3a">W{i}</text>', f'<text x="{x(i)}" y="312" text-anchor="middle">{n}/{base}명</text>']
+        value = f'{percent:.1f}'.rstrip('0').rstrip('.')
+        label = f'W{i}*' if i == 4 else f'W{i}'
+        parts += [f'<circle cx="{x(i)}" cy="{y(n)}" r="5" fill="#246bfe"/>', f'<text x="{label_x}" y="{y(n)-12}" text-anchor="{anchor}" fill="#173a85" font-size="18" font-weight="600">{value}%</text>', f'<text x="{x(i)}" y="282" text-anchor="middle" fill="#252d3a">{label}</text>', f'<text x="{x(i)}" y="312" text-anchor="middle">{n}/{base}명</text>']
     return '\n'.join(parts + ['</g></svg>']) + '\n'
 
 

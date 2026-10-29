@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 340" role="img" aria-labelledby="title desc">
-<title id="title">사이트 첫 방문 코호트의 4주 리텐션, 참고 지표</title><desc id="desc">8월 25일부터 9월 26일까지 첫 방문한 동일한 40명을 추적한다. W0 40명, W1 3명, W2 2명, W3 1명, W4 0명. 공고 열람 사용자 기준 리텐션과 다르다.</desc>
+<title id="title">9월 27일부터 10월 3일 첫 방문 집단의 리텐션</title><desc id="desc">동일한 26명을 추적한다. W0 26명, W1 3명, W2 6명, W3 0명, W4 1명. W4는 10월 25일부터 31일까지 중 28일까지 관측한 잠정값이다. 사이트 재방문 기준으로 공고 열람 리텐션과 구분한다.</desc>
 <rect width="960" height="340" fill="white"/>
 <g font-family="Pretendard, -apple-system, BlinkMacSystemFont, Apple SD Gothic Neo, sans-serif" fill="#657082" font-size="16">
+<rect x="835" y="28" width="105" height="300" rx="8" fill="#f2f5fa"/>
 <text x="8" y="20">복귀율</text>
 <line x1="78" x2="900" y1="250.0" y2="250.0" stroke="#e9edf2"/>
 <text x="64" y="255.0" text-anchor="end">0%</text>
@@ -13,25 +14,26 @@
 <text x="64" y="102.0" text-anchor="end">75%</text>
 <line x1="78" x2="900" y1="46.0" y2="46.0" stroke="#e9edf2"/>
 <text x="64" y="51.0" text-anchor="end">100%</text>
-<polyline points="78.0,46.0 283.5,234.7 489.0,239.8 694.5,244.9 900.0,250.0" fill="none" stroke="#246bfe" stroke-width="3"/>
+<polyline points="78.0,46.0 283.5,226.46153846153845 489.0,202.9230769230769 694.5,250.0" fill="none" stroke="#246bfe" stroke-width="3"/>
+<line x1="694.5" y1="250.0" x2="900.0" y2="242.15384615384616" stroke="#246bfe" stroke-width="3" stroke-dasharray="6 5"/>
 <circle cx="78.0" cy="46.0" r="5" fill="#246bfe"/>
 <text x="92.0" y="34.0" text-anchor="start" fill="#173a85" font-size="18" font-weight="600">100%</text>
 <text x="78.0" y="282" text-anchor="middle" fill="#252d3a">W0</text>
-<text x="78.0" y="312" text-anchor="middle">40/40명</text>
-<circle cx="283.5" cy="234.7" r="5" fill="#246bfe"/>
-<text x="283.5" y="222.7" text-anchor="middle" fill="#173a85" font-size="18" font-weight="600">7.5%</text>
+<text x="78.0" y="312" text-anchor="middle">26/26명</text>
+<circle cx="283.5" cy="226.46153846153845" r="5" fill="#246bfe"/>
+<text x="283.5" y="214.46153846153845" text-anchor="middle" fill="#173a85" font-size="18" font-weight="600">11.5%</text>
 <text x="283.5" y="282" text-anchor="middle" fill="#252d3a">W1</text>
-<text x="283.5" y="312" text-anchor="middle">3/40명</text>
-<circle cx="489.0" cy="239.8" r="5" fill="#246bfe"/>
-<text x="489.0" y="227.8" text-anchor="middle" fill="#173a85" font-size="18" font-weight="600">5%</text>
+<text x="283.5" y="312" text-anchor="middle">3/26명</text>
+<circle cx="489.0" cy="202.9230769230769" r="5" fill="#246bfe"/>
+<text x="489.0" y="190.9230769230769" text-anchor="middle" fill="#173a85" font-size="18" font-weight="600">23.1%</text>
 <text x="489.0" y="282" text-anchor="middle" fill="#252d3a">W2</text>
-<text x="489.0" y="312" text-anchor="middle">2/40명</text>
-<circle cx="694.5" cy="244.9" r="5" fill="#246bfe"/>
-<text x="694.5" y="232.9" text-anchor="middle" fill="#173a85" font-size="18" font-weight="600">2.5%</text>
+<text x="489.0" y="312" text-anchor="middle">6/26명</text>
+<circle cx="694.5" cy="250.0" r="5" fill="#246bfe"/>
+<text x="694.5" y="238.0" text-anchor="middle" fill="#173a85" font-size="18" font-weight="600">0%</text>
 <text x="694.5" y="282" text-anchor="middle" fill="#252d3a">W3</text>
-<text x="694.5" y="312" text-anchor="middle">1/40명</text>
-<circle cx="900.0" cy="250.0" r="5" fill="#246bfe"/>
-<text x="900.0" y="238.0" text-anchor="middle" fill="#173a85" font-size="18" font-weight="600">0%</text>
-<text x="900.0" y="282" text-anchor="middle" fill="#252d3a">W4</text>
-<text x="900.0" y="312" text-anchor="middle">0/40명</text>
+<text x="694.5" y="312" text-anchor="middle">0/26명</text>
+<circle cx="900.0" cy="242.15384615384616" r="5" fill="#246bfe"/>
+<text x="900.0" y="230.15384615384616" text-anchor="middle" fill="#173a85" font-size="18" font-weight="600">3.8%</text>
+<text x="900.0" y="282" text-anchor="middle" fill="#252d3a">W4*</text>
+<text x="900.0" y="312" text-anchor="middle">1/26명</text>
 </g></svg>

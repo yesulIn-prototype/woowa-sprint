@@ -203,7 +203,53 @@
         "base": 40,
         "percent": 0
       }
-    ]
+    ],
+    "displayCohort": {
+      "start": "2026-09-27",
+      "end": "2026-10-03",
+      "size": 26,
+      "week4Start": "2026-10-25",
+      "week4End": "2026-10-31",
+      "observedThrough": "2026-10-28",
+      "week4Partial": true,
+      "curve": [
+        {
+          "week": 0,
+          "returned": 26,
+          "base": 26,
+          "percent": 100,
+          "partial": false
+        },
+        {
+          "week": 1,
+          "returned": 3,
+          "base": 26,
+          "percent": 11.538461538461538,
+          "partial": false
+        },
+        {
+          "week": 2,
+          "returned": 6,
+          "base": 26,
+          "percent": 23.076923076923077,
+          "partial": false
+        },
+        {
+          "week": 3,
+          "returned": 0,
+          "base": 26,
+          "percent": 0,
+          "partial": false
+        },
+        {
+          "week": 4,
+          "returned": 1,
+          "base": 26,
+          "percent": 3.8461538461538463,
+          "partial": true
+        }
+      ]
+    }
   },
   "currentRoom": {
     "observedOn": "2026-10-29",
@@ -215,5 +261,56 @@
     "todayExits": 1,
     "openingMembersDerived": 225,
     "limitation": "Do not append these counts to the CSV after its October 28 13:15 cutoff; the gap is not fully observed."
+  },
+  "openChatLinkSnapshot": {
+    "source": "https://yesulin.art/admin/openchat",
+    "observedOn": "2026-10-29",
+    "metric": "Cumulative tracked link visits, deduplicated by browser storage",
+    "criterionClarifiedOn": "2026-10-29",
+    "window": "First share time inclusive to 24 hours later exclusive",
+    "audienceAtShare": 221,
+    "teamAccounts": 5,
+    "denominator": 216,
+    "goalRate": 0.1,
+    "minimumVisits": 22,
+    "confidence": 8,
+    "scope": "All shared posts must meet the goal; these three verified posts are below it.",
+    "rows": [
+      {
+        "postId": 164,
+        "sharedAt": "2026-10-27T09:02:26+09:00",
+        "exact24hCount": null,
+        "cumulativeVisits": 5,
+        "collected24hUpperBound": 5,
+        "result": "Below target"
+      },
+      {
+        "postId": 165,
+        "sharedAt": "2026-10-27T09:02:26+09:00",
+        "exact24hCount": null,
+        "cumulativeVisits": 4,
+        "collected24hUpperBound": 4,
+        "result": "Below target"
+      },
+      {
+        "postId": 161,
+        "sharedAt": "2026-10-27T10:14:09+09:00",
+        "exact24hCount": null,
+        "cumulativeVisits": 9,
+        "collected24hUpperBound": 9,
+        "result": "Below target"
+      }
+    ],
+    "limitation": "Snapshot was taken after each 24-hour window ended. Cumulative counts bound the tracked 24-hour counts; exact window counts and verified people are not stored. Do not replace the GA4 all-channel daily counts with these numbers."
+  },
+  "supporterAssessment": {
+    "assessedOn": "2026-10-29",
+    "criterion": "50 entry notices within the observed 72 hours",
+    "observedEntries": 93,
+    "exits": 11,
+    "netGrowth": 82,
+    "teamVerdict": "Success against observed volume criterion",
+    "causalAttribution": "Not isolated",
+    "preRegistrationVerified": false
   }
 }
