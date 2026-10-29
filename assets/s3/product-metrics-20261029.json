@@ -1,0 +1,219 @@
+{
+  "observedOn": "2026-10-29",
+  "timezone": "Asia/Seoul",
+  "source": {
+    "type": "GA4 exploration UI",
+    "url": "https://analytics.google.com/analytics/web/#/analysis/a402322610p551658773/edit/4UoUTZ7-Qy-7QUigJAxtrA",
+    "method": "Aggregate values transcribed from the GA4 UI; no individual user records stored."
+  },
+  "exclusion": {
+    "type": "User segment",
+    "pageTitleContains": "운영 대시보드",
+    "mode": "Permanently exclude",
+    "scope": "Selected exploration period",
+    "limitation": "Team browsers which never visited the admin dashboard can remain."
+  },
+  "weeklyPostingViewers": {
+    "metric": "Total users",
+    "pagePathStartsWith": "/posts/",
+    "rows": [
+      {
+        "start": "2026-10-19",
+        "end": "2026-10-25",
+        "days": 7,
+        "totalUsers": 236,
+        "activeUsers": 224,
+        "partial": false
+      },
+      {
+        "start": "2026-10-26",
+        "end": "2026-10-28",
+        "days": 3,
+        "totalUsers": 142,
+        "activeUsers": 119,
+        "partial": true
+      }
+    ],
+    "limitation": "Browser identifiers, not verified people or open-chat members. Week 2 is incomplete."
+  },
+  "dailyPosts": {
+    "date": "2026-10-27",
+    "metric": "Total users",
+    "channelScope": "All channels, not attributed exclusively to open chat",
+    "membersAtShare": 221,
+    "teamAccounts": 5,
+    "audienceExcludingTeam": 216,
+    "rows": [
+      {
+        "postId": 164,
+        "sharedAt": "2026-10-27T09:02:26+09:00",
+        "totalUsers": 3,
+        "activeUsers": 2
+      },
+      {
+        "postId": 165,
+        "sharedAt": "2026-10-27T09:02:26+09:00",
+        "totalUsers": 12,
+        "activeUsers": 9
+      },
+      {
+        "postId": 161,
+        "sharedAt": "2026-10-27T10:14:09+09:00",
+        "totalUsers": 8,
+        "activeUsers": 2
+      }
+    ],
+    "chatSourceSha256": "d551e875083378c03c228594cfc8d00d7911bfc469cbdb4570f438aed7be23b5"
+  },
+  "siteFirstTouchCohorts": {
+    "start": "2026-08-25",
+    "end": "2026-10-28",
+    "inclusion": "First touch (acquisition date)",
+    "returnCriterion": "Any event",
+    "metric": "Active users",
+    "granularity": "Sunday to Saturday",
+    "cohorts": [
+      {
+        "start": "2026-08-25",
+        "size": 27,
+        "returns": [
+          2,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "start": "2026-08-30",
+        "size": 10,
+        "returns": [
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "start": "2026-09-06",
+        "size": 0,
+        "returns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "start": "2026-09-13",
+        "size": 2,
+        "returns": [
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "start": "2026-09-20",
+        "size": 1,
+        "returns": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "start": "2026-09-27",
+        "size": 26,
+        "returns": [
+          3,
+          6,
+          0,
+          1
+        ]
+      },
+      {
+        "start": "2026-10-04",
+        "size": 105,
+        "returns": [
+          13,
+          6,
+          5
+        ]
+      },
+      {
+        "start": "2026-10-11",
+        "size": 143,
+        "returns": [
+          18,
+          6
+        ]
+      },
+      {
+        "start": "2026-10-18",
+        "size": 254,
+        "returns": [
+          24
+        ]
+      },
+      {
+        "start": "2026-10-25",
+        "size": 140,
+        "returns": []
+      }
+    ],
+    "completedWeek4CohortStarts": [
+      "2026-08-25",
+      "2026-08-30",
+      "2026-09-06",
+      "2026-09-13",
+      "2026-09-20"
+    ],
+    "limitation": "Site acquisition/any-event return, not posting-view retention. The September 27 cohort has only a partial W4 through October 28; its 1/26 is excluded from completed W4.",
+    "allCohortsW0": 708,
+    "completedCurve": [
+      {
+        "week": 0,
+        "returned": 40,
+        "base": 40,
+        "percent": 100
+      },
+      {
+        "week": 1,
+        "returned": 3,
+        "base": 40,
+        "percent": 7.5
+      },
+      {
+        "week": 2,
+        "returned": 2,
+        "base": 40,
+        "percent": 5
+      },
+      {
+        "week": 3,
+        "returned": 1,
+        "base": 40,
+        "percent": 2.5
+      },
+      {
+        "week": 4,
+        "returned": 0,
+        "base": 40,
+        "percent": 0
+      }
+    ]
+  },
+  "currentRoom": {
+    "observedOn": "2026-10-29",
+    "source": "User observed current room count; not a new CSV export",
+    "members": 227,
+    "teamAccounts": 5,
+    "excludingTeam": 222,
+    "todayEntries": 3,
+    "todayExits": 1,
+    "openingMembersDerived": 225,
+    "limitation": "Do not append these counts to the CSV after its October 28 13:15 cutoff; the gap is not fully observed."
+  }
+}

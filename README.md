@@ -84,4 +84,5 @@ vercel deploy --prod
 - S2의 `overview`는 핵심 결과 네 가지, 공고 전달 흐름, 다음 작업과 서비스 변경을 요약한다. 긴 작업 기록은 같은 페이지에서 펼쳐 볼 수 있다.
 - S3는 `productEvidence`에 사용자 행동에서 시작한 개선 사례, `hypothesis.cycles`에 PDF 심사와 서포터즈 가설, `productPlans`에 다음 실사용 계획을 적는다. `hypothesis.flat: true`로 가설을 접지 않고 표시하며, `userData.sections`의 표와 근거도 바로 보여 준다. `overview.footnote`는 관측 종료 시점을 명시한다.
 - S3 알림방 그래프는 `python3 scripts/generate-sprint3-chat.py <원본 CSV 경로>`로 재생성한다. 저장되는 JSON과 SVG에는 입퇴장 집계와 원본 해시만 포함하며 대화 원문과 닉네임은 포함하지 않는다. 10.28 13:15까지의 부분 집계와 72시간 관측 구간을 구분한다.
+- S3 제품 지표의 GA4 집계 조건과 관측값은 `assets/s3/product-metrics-20261029.json`에 보존한다. `python3 scripts/generate-sprint3-product-charts.py`로 공고 열람자와 참고 리텐션 그래프를 재생성한다. 총 사용자와 GA4 활성 사용자를 구분하고, 리텐션 그림은 W4 관측을 마친 동일 코호트만 사용한다. 공고 열람과 사이트 첫 방문 리텐션은 서로 다른 집계다.
 - `userData.report.compact`는 지표 설명을 짧게 보여 주고 집계 근거를 접는다. 요구사항의 `partial: true`는 △ 부분 충족으로 표시하며, 백엔드 작업의 `status`와 제출 승인 상태는 별도로 관리한다.
