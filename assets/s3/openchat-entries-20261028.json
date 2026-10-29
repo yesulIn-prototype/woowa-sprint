@@ -1,0 +1,90 @@
+{
+  "sourceSha256": "d551e875083378c03c228594cfc8d00d7911bfc469cbdb4570f438aed7be23b5",
+  "period": {
+    "start": "2026-10-19T00:00:00",
+    "through": "2026-10-28T13:15:17",
+    "timezone": "Asia/Seoul (CSV original dates)"
+  },
+  "partialLastDay": true,
+  "totalEntries": 135,
+  "totalExits": 19,
+  "membership": {
+    "initial": 0,
+    "atCutoff": 224,
+    "teamAccounts": 5,
+    "excludingTeam": 219
+  },
+  "campaign72h": {
+    "startInclusive": "2026-10-20T13:38:00",
+    "endExclusive": "2026-10-23T13:38:00",
+    "entries": 93,
+    "exits": 11,
+    "netChange": 82,
+    "membersBefore": 110,
+    "membersAfter": 192,
+    "basis": "User confirmed 10/20 date for the 13:38 promotion screenshot; not necessarily the campaign's first post"
+  },
+  "limitations": "Entry notices include reentries. Team accounts are removed only from cutoff membership. Acquisition attribution and unique people are not identified.",
+  "daily": [
+    {
+      "date": "2026-10-19",
+      "entries": 2,
+      "exits": 0,
+      "partial": false
+    },
+    {
+      "date": "2026-10-20",
+      "entries": 72,
+      "exits": 4,
+      "partial": false
+    },
+    {
+      "date": "2026-10-21",
+      "entries": 11,
+      "exits": 3,
+      "partial": false
+    },
+    {
+      "date": "2026-10-22",
+      "entries": 5,
+      "exits": 4,
+      "partial": false
+    },
+    {
+      "date": "2026-10-23",
+      "entries": 8,
+      "exits": 0,
+      "partial": false
+    },
+    {
+      "date": "2026-10-24",
+      "entries": 8,
+      "exits": 4,
+      "partial": false
+    },
+    {
+      "date": "2026-10-25",
+      "entries": 13,
+      "exits": 2,
+      "partial": false
+    },
+    {
+      "date": "2026-10-26",
+      "entries": 12,
+      "exits": 1,
+      "partial": false
+    },
+    {
+      "date": "2026-10-27",
+      "entries": 1,
+      "exits": 0,
+      "partial": false
+    },
+    {
+      "date": "2026-10-28",
+      "entries": 3,
+      "exits": 1,
+      "partial": true
+    }
+  ]
+}

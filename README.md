@@ -82,4 +82,6 @@ vercel deploy --prod
 - S2 백엔드 요약은 `tech.backend.report`에서 편집한다. `runs`의 실제 시작·실패 요청 수로 전후 성공·실패 비율 그림을 직접 그린다. 다른 RPS의 실행을 최대 처리량이나 개선 배율로 표현하지 않는다.
 - S2 제품 본문은 `hypothesis.concise`, `userData.report`를 사용한다. 10월 관측값을 먼저 보여 주고 8·9월 GA4 기록과 리텐션은 과거 참고 자료로 접어 둔다. 가설 7개 필드와 원자료는 누적 문서에 보존한다.
 - S2의 `overview`는 핵심 결과 네 가지, 공고 전달 흐름, 다음 작업과 서비스 변경을 요약한다. 긴 작업 기록은 같은 페이지에서 펼쳐 볼 수 있다.
+- S3는 `productEvidence`에 사용자 행동에서 시작한 개선 사례, `hypothesis.cycles`에 PDF 심사와 서포터즈 가설, `productPlans`에 다음 실사용 계획을 적는다. `hypothesis.flat: true`로 가설을 접지 않고 표시하며, `userData.sections`의 표와 근거도 바로 보여 준다. `overview.footnote`는 관측 종료 시점을 명시한다.
+- S3 알림방 그래프는 `python3 scripts/generate-sprint3-chat.py <원본 CSV 경로>`로 재생성한다. 저장되는 JSON과 SVG에는 입퇴장 집계와 원본 해시만 포함하며 대화 원문과 닉네임은 포함하지 않는다. 10.28 13:15까지의 부분 집계와 72시간 관측 구간을 구분한다.
 - `userData.report.compact`는 지표 설명을 짧게 보여 주고 집계 근거를 접는다. 요구사항의 `partial: true`는 △ 부분 충족으로 표시하며, 백엔드 작업의 `status`와 제출 승인 상태는 별도로 관리한다.

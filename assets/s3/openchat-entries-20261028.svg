@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 350" role="img" aria-labelledby="title desc">
+<title id="title">10월 19일부터 10월 28일까지 알림방 일별 입장 건수</title>
+<desc id="desc">관측 기간 입장 135건. 10월 20일 입장 72건. 10월 28일은 13시 15분까지의 부분 집계다. 재입장을 포함하며 현재 방 인원이나 홍보만의 효과를 뜻하지 않는다.</desc>
+<defs><pattern id="partial" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#e8efff"/><line x1="0" y1="0" x2="0" y2="7" stroke="#a9c2ff" stroke-width="2"/></pattern></defs>
+<rect width="960" height="350" fill="white"/>
+<g font-family="Pretendard, -apple-system, BlinkMacSystemFont, Apple SD Gothic Neo, sans-serif" font-size="14" fill="#767b87">
+<text x="16" y="19">건</text>
+<line x1="48" x2="940" y1="276.00" y2="276.00" stroke="#eceef1"/>
+<text x="32" y="280.00" text-anchor="end">0</text>
+<line x1="48" x2="940" y1="245.50" y2="245.50" stroke="#eceef1"/>
+<text x="32" y="249.50" text-anchor="end">10</text>
+<line x1="48" x2="940" y1="215.00" y2="215.00" stroke="#eceef1"/>
+<text x="32" y="219.00" text-anchor="end">20</text>
+<line x1="48" x2="940" y1="184.50" y2="184.50" stroke="#eceef1"/>
+<text x="32" y="188.50" text-anchor="end">30</text>
+<line x1="48" x2="940" y1="154.00" y2="154.00" stroke="#eceef1"/>
+<text x="32" y="158.00" text-anchor="end">40</text>
+<line x1="48" x2="940" y1="123.50" y2="123.50" stroke="#eceef1"/>
+<text x="32" y="127.50" text-anchor="end">50</text>
+<line x1="48" x2="940" y1="93.00" y2="93.00" stroke="#eceef1"/>
+<text x="32" y="97.00" text-anchor="end">60</text>
+<line x1="48" x2="940" y1="62.50" y2="62.50" stroke="#eceef1"/>
+<text x="32" y="66.50" text-anchor="end">70</text>
+<line x1="48" x2="940" y1="32.00" y2="32.00" stroke="#eceef1"/>
+<text x="32" y="36.00" text-anchor="end">80</text>
+<rect x="74.60" y="269.90" width="36" height="6.10" fill="#246bfe"/>
+<text x="92.60" y="260.90" text-anchor="middle" fill="#273b6b" font-size="14" font-weight="600">2</text>
+<text x="92.60" y="303" text-anchor="middle">10/19</text>
+<rect x="163.80" y="56.40" width="36" height="219.60" fill="#246bfe"/>
+<text x="181.80" y="47.40" text-anchor="middle" fill="#273b6b" font-size="18" font-weight="600">72</text>
+<text x="181.80" y="303" text-anchor="middle">10/20</text>
+<rect x="253.00" y="242.45" width="36" height="33.55" fill="#246bfe"/>
+<text x="271.00" y="233.45" text-anchor="middle" fill="#273b6b" font-size="14" font-weight="600">11</text>
+<text x="271.00" y="303" text-anchor="middle">10/21</text>
+<rect x="342.20" y="260.75" width="36" height="15.25" fill="#246bfe"/>
+<text x="360.20" y="251.75" text-anchor="middle" fill="#273b6b" font-size="14" font-weight="600">5</text>
+<text x="360.20" y="303" text-anchor="middle">10/22</text>
+<rect x="431.40" y="251.60" width="36" height="24.40" fill="#246bfe"/>
+<text x="449.40" y="242.60" text-anchor="middle" fill="#273b6b" font-size="14" font-weight="600">8</text>
+<text x="449.40" y="303" text-anchor="middle">10/23</text>
+<rect x="520.60" y="251.60" width="36" height="24.40" fill="#246bfe"/>
+<text x="538.60" y="242.60" text-anchor="middle" fill="#273b6b" font-size="14" font-weight="600">8</text>
+<text x="538.60" y="303" text-anchor="middle">10/24</text>
+<rect x="609.80" y="236.35" width="36" height="39.65" fill="#246bfe"/>
+<text x="627.80" y="227.35" text-anchor="middle" fill="#273b6b" font-size="14" font-weight="600">13</text>
+<text x="627.80" y="303" text-anchor="middle">10/25</text>
+<rect x="699.00" y="239.40" width="36" height="36.60" fill="#246bfe"/>
+<text x="717.00" y="230.40" text-anchor="middle" fill="#273b6b" font-size="14" font-weight="600">12</text>
+<text x="717.00" y="303" text-anchor="middle">10/26</text>
+<rect x="788.20" y="272.95" width="36" height="3.05" fill="#246bfe"/>
+<text x="806.20" y="263.95" text-anchor="middle" fill="#273b6b" font-size="14" font-weight="600">1</text>
+<text x="806.20" y="303" text-anchor="middle">10/27</text>
+<rect x="877.40" y="266.85" width="36" height="9.15" fill="url(#partial)"/>
+<text x="895.40" y="257.85" text-anchor="middle" fill="#273b6b" font-size="14" font-weight="600">3*</text>
+<text x="895.40" y="303" text-anchor="middle">10/28*</text>
+<text x="48" y="334">* 10/28은 13:15까지의 부분 집계</text>
+</g></svg>
