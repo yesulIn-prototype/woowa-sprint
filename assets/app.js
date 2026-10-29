@@ -187,6 +187,20 @@
       .map((r) => `<tr>${r.map((c, i) => (i === 0 ? `<th scope="row">${c}</th>` : `<td>${c}</td>`)).join("")}</tr>`)
       .join("")}</tbody></table></div>`;
 
+  // 짧은 사례와 관측 표를 페이지 안에서 바로 읽는 기록 블록.
+  function storyBlocks(blocks, idPrefix = "") {
+    return (blocks || []).map((b) => `<article class="story-block"${b.id ? ` id="${esc(idPrefix + b.id)}"` : ""}>
+      ${b.eyebrow ? `<p class="story-eyebrow">${esc(b.eyebrow)}</p>` : ""}
+      <h3>${inline(b.title)}</h3>
+      ${b.body ? `<div class="prose">${rich(b.body)}</div>` : ""}
+      ${reportVisuals(b.visuals)}
+      ${b.table ? table(b.table.head.map(inline), b.table.rows.map((r) => r.map(cell))) : ""}
+      ${figures(b.figures)}
+      ${b.after ? `<div class="prose story-after">${rich(b.after)}</div>` : ""}
+      ${b.links?.length ? `<div class="report-links">${b.links.map((l) => link(l.url,l.label)).join("")}</div>` : ""}
+    </article>`).join("");
+  }
+
   function metricComparison(items) {
     return `<div class="metric-comparison">${items.map((item) => `<article class="metric-card">
       <h4>${inline(item.label)}</h4>
@@ -521,8 +535,8 @@
         ${s.review && !s.presentation?.hideSubmissionStatus ? `<div class="review-summary"><p>${esc(s.review.date)} · 코치 피드백</p><div><span>백엔드 ${badge(submissionStatus(s,"backend"))}</span><span>소프트스킬 ${badge(submissionStatus(s,"softskill"))}</span><span>제품 ${badge(submissionStatus(s,"product"))}</span></div><p>${esc(s.review.summary)}</p></div>` : ""}
         <h3>${esc(o.title)}</h3><p class="summary-intro">${esc(o.summary)}</p>
         <div class="summary-outcomes">${o.outcomes.map((v) => `<div><p>${esc(v.label)}</p><strong>${esc(v.value)}</strong><span>${esc(v.detail)}</span></div>`).join("")}</div>
-        <ol class="summary-flow" aria-label="공고를 배우에게 전달하는 흐름">${o.flow.map((step,i) => `<li><span>0${i+1}</span>${esc(step)}</li>`).join("")}</ol>
-        <p class="summary-footnote">10.15까지의 관측 기록 · 비용은 일평균의 월 환산 추정치</p>
+        <ol class="summary-flow" style="--flow-count:${o.flow.length}" aria-label="${esc(o.flowLabel || "공고를 배우에게 전달하는 흐름")}">${o.flow.map((step,i) => `<li><span>0${i+1}</span>${esc(step)}</li>`).join("")}</ol>
+        <p class="summary-footnote">${esc(o.footnote || "10.15까지의 관측 기록 · 비용은 일평균의 월 환산 추정치")}</p>
       </div>`;
     }
     const works = worksOf(s);
@@ -622,7 +636,7 @@
     // 정의는 스프린트마다 바뀔 수 있어, sprint-N.js의 userData.metrics가 있으면 site.js 값보다 먼저 쓴다.
     const m = { ...(store.site.metrics || {}), ...(u.metrics || {}) };
     const wau = u.wau || [];
-    const recruits = recruitsOf(s);
+    const recruits = s.presentation?.hideRecruiting ? [] : recruitsOf(s);
     // cycles가 있으면 여러 사이클을 접었다 펼 수 있는 목록으로, 없으면 한 사이클의 칸으로 보여 준다.
     const cycles = (h.cycles || []).filter((c) => filled(c.title) || filled(c.hypothesis));
     const hypothesisHtml = hypothesisRecord(h);
@@ -651,11 +665,14 @@
 
     return `
       ${productSubmission(s)}
+      ${storyBlocks(s.productEvidence)}
       ${subhead(
         "가설 사이클",
         [cycles.length ? `<span class="mono">${cycles.length}건</span>` : "", link(store.site.links?.hypothesisDoc, "가설 검증 기록")].join(""),
       )}
       ${hypothesisHtml}
+
+      ${storyBlocks(s.productPlans)}
 
       <div id="user-data">${
         filled(u.unavailable) ? `${subhead("유저 데이터")}<div class="prose">${rich(u.unavailable)}</div>` : userData(u, m, wau, stat)
@@ -669,12 +686,12 @@
       ? `${filled(h.intro) ? `<div class="prose hyp-note">${rich(h.intro)}</div>` : ""}
         <div class="cycles">${cycles
           .map(
-            (c, i) => `<details class="cycle"${c.featured ? " open" : ""}>
-              <summary><span class="cycle-no">${i + 1}/${cycles.length}</span><span class="cycle-title">${inline(c.title)}</span>${
+            (c, i) => `<${h.flat ? 'article class="cycle cycle-flat"' : `details class="cycle"${c.featured ? " open" : ""}`}>
+              <${h.flat ? 'header class="cycle-heading"' : 'summary'}><span class="cycle-no">${i + 1}/${cycles.length}</span><${h.flat ? 'h3' : 'span'} class="cycle-title">${inline(c.title)}</${h.flat ? 'h3' : 'span'}>${
                 c.featured ? '<span class="cycle-tag">대표 사례</span>' : ""
-              }${badge(c.verdict)}</summary>
-              <div class="cycle-body">${reportVisuals(c.visuals)}${cycleFields(c)}${figures(c.figures)}</div>
-            </details>`,
+              }${badge(c.verdict)}</${h.flat ? 'header' : 'summary'}>
+              <div class="cycle-body">${reportVisuals(c.visuals)}${cycleFields(c)}${figures(c.figures)}${c.links?.length ? `<div class="report-links">${c.links.map((l) => link(l.url,l.label)).join("")}</div>` : ""}</div>
+            </${h.flat ? 'article' : 'details'}>`,
           )
           .join("")}</div>
         ${filled(h.outro) ? `<div class="prose hyp-note">${rich(h.outro)}</div>` : ""}`
@@ -735,13 +752,15 @@
       ${field("가설", h.hypothesis, "무엇이 참이라고 보는가. 왜 이 가설을 골랐는가")}
       ${field("실험", h.experiment, "어떻게 확인하는가. 성공 기준을 숫자로 미리")}
       ${field("관측", h.observation, "무엇이 나왔는가. 누구에게서, 몇 명에게서 얻었나")}
+      ${h.observationTable ? table(h.observationTable.head.map(inline), h.observationTable.rows.map((r) => r.map(cell))) : ""}
       ${row("결론", verdict)}
       ${field("러닝", h.learning, "제품과 유저에 대해 배운 것")}
       ${field("다음 액션", h.nextAction, "다음 스프린트에 할 실험")}
       ${row("자신감", confidence)}`;
   }
 
-  function userData(u, m, wau, stat) {
+  function userData(u, m, wau, stat, idPrefix = "") {
+    if (u.sections) return `<div class="user-report">${storyBlocks(u.sections, idPrefix)}</div>`;
     if (u.report) return userReport(u, m);
     return `
       ${subhead("유저 데이터", link(store.site.links?.userReport, "유저 데이터 리포트"))}
@@ -1184,7 +1203,7 @@
       <nav class="report-jumps" aria-label="스프린트별 기록">${records.map((s) => `<a class="link" href="#sprint-${s.no}">스프린트 ${s.no}</a>`).join("")}</nav></header>
       ${records.map((s) => `<section class="sec" id="sprint-${s.no}"><h2>스프린트 ${s.no} · ${esc(s.start)} ~ ${esc(s.end)}</h2>
         <p>${link(`sprint.html?n=${s.no}#hypothesis`, "스프린트 페이지로 →")}</p>
-        ${isHypothesis ? hypothesisRecord(s.hypothesis || {}) : userData(s.userData || {}, { ...store.site.metrics, ...s.userData?.metrics }, s.userData?.wau || [], stat)}
+        ${isHypothesis ? hypothesisRecord(s.hypothesis || {}) : userData(s.userData || {}, { ...store.site.metrics, ...s.userData?.metrics }, s.userData?.wau || [], stat, `sprint-${s.no}-`)}
       </section>`).join("")}</main>${footer()}`;
   }
 

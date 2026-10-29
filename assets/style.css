@@ -24,6 +24,24 @@
   --label-w: 9.5rem;
 }
 
+/* 스프린트별로 선택하는 펼친 기록. 기존 스프린트의 접기 UI는 유지한다. */
+.story-block { padding: 36px 0; border-top: 1px solid var(--rule); scroll-margin-top: 130px; }
+.story-block:first-child { border-top: 0; padding-top: 8px; }
+.story-block h3 { font-size: 25px; line-height: 1.45; letter-spacing: -.03em; margin: 0 0 20px; color: var(--ink); }
+.story-eyebrow { color: var(--accent); font-size: 13px; font-weight: 650; margin: 0 0 8px; }
+.story-after { margin-top: 20px; color: var(--muted); font-size: 14px; }
+.story-block .table-scroll { margin: 24px 0; }
+.cycle-flat { padding: 24px 0; }
+.cycle-heading { display: flex; align-items: center; gap: 12px; padding: 12px 0 24px; flex-wrap: wrap; }
+.cycle-heading .cycle-title { flex: 1; min-width: 200px; margin: 0; font-size: 23px; line-height: 1.45; }
+.cycle-flat .cycle-body { padding: 0; }
+.cycle-flat .field { padding-top: 18px; padding-bottom: 18px; }
+.cycle-flat .table-scroll { margin-bottom: 24px; }
+@media (max-width: 640px) {
+  .story-block h3, .cycle-heading .cycle-title { font-size: 21px; }
+  .story-block { padding: 28px 0; }
+}
+
 *,
 *::before,
 *::after {
@@ -1917,7 +1935,7 @@ figcaption {
 .summary-outcomes p { margin: 0 0 10px; color: #657082; font-size: 13px; }
 .summary-outcomes strong { display: block; color: var(--ink); font-size: clamp(29px,3.2vw,40px); line-height: 1.3; letter-spacing: -.045em; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .summary-outcomes span { display: block; margin-top: 10px; color: #747d8b; font-size: 12px; line-height: 1.7; }
-.summary-flow { list-style: none; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; margin: 28px 0 0; padding: 0; }
+.summary-flow { list-style: none; display: grid; grid-template-columns: repeat(var(--flow-count,3),minmax(0,1fr)); gap: 16px; margin: 28px 0 0; padding: 0; }
 .summary-flow li { position: relative; padding: 16px 20px; background: #f6f8fb; border-radius: 8px; font-size: 14px; font-weight: 550; }
 .summary-flow li + li::before { content: "→"; position: absolute; left: -14px; top: 29px; color: #9da8b9; font-size: 13px; }
 .summary-flow span { display: block; color: #8390a4; font-size: 11px; font-weight: 500; margin-bottom: 3px; }
