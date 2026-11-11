@@ -694,9 +694,25 @@
             </${h.flat ? 'article' : 'details'}>`,
           )
           .join("")}</div>
-        ${filled(h.outro) ? `<div class="prose hyp-note">${rich(h.outro)}</div>` : ""}`
+        ${filled(h.outro) ? `<div class="prose hyp-note">${rich(h.outro)}</div>` : ""}
+        ${cycleRecap(h.recap)}`
       : cycleFields(h);
 
+  }
+
+  // 레벨4 마지막 스프린트의 네 사이클 정리. 스프린트마다 한 줄씩, 빈 칸은 작성 가이드로 보인다.
+  function cycleRecap(r) {
+    if (!r) return "";
+    const hint = (v, text) => (filled(v) ? inline(String(v)) : `<span class="dash">${esc(text)}</span>`);
+    return `<div class="cycle-recap" id="cycle-recap">
+      ${subhead("네 사이클 정리")}
+      ${filled(r.note) ? `<div class="prose hyp-note">${rich(r.note)}</div>` : ""}
+      ${table(
+        ["스프린트", "가설 한 줄", "결론 (검증/기각/판정 불가)", "자신감 (0에서 10)"],
+        r.rows.map((x) => [esc(x.sprint), hint(x.title, "가설 한 줄"), filled(x.verdict) ? badge(x.verdict) : hint("", "결론"), hint(x.confidence, "0~10")]),
+      )}
+      ${field("알게 된 것", r.learned, "네 번의 사이클을 지나며 이 제품과 유저에 대해 알게 된 것을 3~5줄로")}
+    </div>`;
   }
 
   const reportDetails = (label, html) => filled(html)
@@ -709,9 +725,10 @@
       <div class="prose">${rich(p.note)}</div>
       ${linkField("가설 검증 기록", store.site.links?.hypothesisDoc, "스프린트별 가설 누적 문서")}
       ${linkField("유저 데이터 리포트", store.site.links?.userReport, "스프린트별 데이터 누적 문서")}
-      ${linkField("랜딩페이지", p.landing, "yesulin.art")}
+      ${"landing" in p ? linkField("랜딩페이지", p.landing, "yesulin.art") : ""}
       ${criteriaRow(p.criteria)}
-      ${field("랜딩페이지 확인", p.landingNote)}
+      ${filled(p.landingNote) ? field("랜딩페이지 확인", p.landingNote) : ""}
+      ${(p.formFields || []).map((f) => field(f.label, f.value, f.hint)).join("")}
     </div>`;
   }
 
@@ -749,6 +766,7 @@
 
     return `
       ${plan}
+      ${"reason" in h ? field("이 가설을 고른 이유", h.reason, "이전 사이클의 관측, 다음 액션, 유저 데이터 해석 중 무엇에서 나왔는가") : ""}
       ${field("가설", h.hypothesis, "무엇이 참이라고 보는가. 왜 이 가설을 골랐는가")}
       ${field("실험", h.experiment, "어떻게 확인하는가. 성공 기준을 숫자로 미리")}
       ${field("관측", h.observation, "무엇이 나왔는가. 누구에게서, 몇 명에게서 얻었나")}
@@ -788,7 +806,28 @@
       ${field("핵심 지표 목표", m.coreTarget && [m.coreTarget, m.coreTargetWhy].filter(filled).join("\n\n"), "얼마가 되면 서비스의 가치가 증명됐다고 보는가, 그 수치의 근거")}
       ${field("핵심 지표 해석", u.coreReading, "핵심 지표로 본 핵심 가치와 유저 행동")}
       ${field("집계 제외", m.exclusion, "팀 밖 사용자만 센다. 팀원·테스트 계정을 어떻게 뺐는가")}
-      ${filled(u.nextDefinition) ? field("다음 스프린트부터", u.nextDefinition, "") : ""}`;
+      ${filled(u.nextDefinition) ? field("다음 스프린트부터", u.nextDefinition, "") : ""}
+      ${pmfSurvey(u.pmf, stat)}`;
+  }
+
+  // PMF 설문(Sean Ellis 문항). 문항과 선택지는 팀끼리 비교할 수 있게 바꾸지 않는다.
+  const PMF_CHOICES = ["매우 실망", "약간 실망", "실망하지 않음", "더 이상 쓰지 않음"];
+
+  function pmfSurvey(p, stat) {
+    if (!p) return "";
+    const counts = p.counts || {};
+    const total = Number(p.respondents);
+    const share = (n) => (filled(n) && total > 0 ? `${Math.round((Number(n) / total) * 100)}%` : "");
+    return `<div class="pmf" id="pmf">
+      ${subhead("PMF 설문")}
+      <div class="prose hyp-note"><p><strong>이 제품을 더 이상 쓸 수 없다면 어떻겠습니까?</strong></p></div>
+      ${field("응답자 수", p.respondents, "몇 명이 답했는가. 팀 밖 활성 사용자가 없으면 0명과 그 이유")}
+      <div class="stats">${PMF_CHOICES.map((c) => stat(c, counts[c], share(counts[c]))).join("")}</div>
+      ${field("대상", p.target, "최근 2주 안에 핵심 행동(활성 기준)을 한 팀 밖 사용자를 어떻게 골랐는가")}
+      ${field("모집 경로", p.recruit, "누구에게 어떤 방법(인앱 안내, 메일, 메신저 등)으로 물었고, 언제 받았는가")}
+      ${field("해석", p.reading, "이 결과로 제품과 유저에 대해 알게 된 것. 리텐션·핵심 지표와 같은 방향인지, 매우 실망한 유저와 실망하지 않은 유저는 각각 어떤 유저였는지")}
+      ${"extra" in p ? field("추가 질문", p.extra, "팀이 더 붙인 질문과 답 (선택)") : ""}
+    </div>`;
   }
 
   // S2 제출은 결론부터 읽고, 측정 조건과 원자료를 필요할 때 확인한다.
@@ -1195,7 +1234,7 @@
     document.title = `${title} · ${store.site.team}`;
     const records = Object.values(store.sprints).filter((s) => isHypothesis
       ? filled(s.hypothesis?.cycles) || filled(s.hypothesis?.hypothesis)
-      : filled(s.userData?.activeData) || filled(s.userData?.coreValue));
+      : filled(s.userData?.activeData) || filled(s.userData?.coreValue) || s.userData?.draft);
     const stat = (label, value, sub) => `<div class="stat"><div class="stat-label">${label}</div><div class="stat-value">${cell(value)}</div>${sub ? `<div class="stat-sub">${sub}</div>` : ""}</div>`;
     return `<main class="wrap report-page"><header class="sheader"><p class="eyebrow">예술in · 누적 기록</p><h1>${title}</h1>
       <p class="lede">스프린트별 정의와 관측을 보존한다. 이후에 바꾼 기준으로 과거 결과를 다시 판정하지 않는다.</p>
