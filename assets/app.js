@@ -410,10 +410,11 @@
       ["product", "동작하는 제품", secProduct(s)],
       ["hypothesis", "가설과 결과", secHypothesis(s)],
       ["tech", "기술 요구사항", secTech(s)],
+      ["testing", "테스트 기준 정리", secTesting(s)],
       ["team", "팀으로 일하는 방식", secSoftskill(s)],
       ["retro", "회고와 다음 스프린트", secRetro(s)],
       ["coach", "코치에게", secCoach(s)],
-    ].filter(([id]) => !(s.presentation?.hideSections || []).includes(id));
+    ].filter(([id]) => !(s.presentation?.hideSections || []).includes(id) && (id !== "testing" || s.testCriteria));
 
     // site.js의 layout이 "tabs"면 섹션을 상단 탭으로 나눠 보여 준다. 비우면 예전처럼 한 페이지에 모두 보인다.
     const tabs = store.site.layout === "tabs" ? sprintTabs().map((t) => ({ ...t, ids: t.ids.filter((id) => sections.some(([sid]) => sid === id)) })).filter((t) => t.ids.length) : null;
@@ -494,7 +495,7 @@
         key: "tech",
         label: fields.length === 1 && fields[0] === "backend" ? "Backend" : "Tech",
         title: "기술 요구사항",
-        ids: ["tech"],
+        ids: ["tech", "testing"],
       },
       { key: "softskill", label: "Soft Skill", title: "소프트스킬: 팀으로 일하는 방식", ids: ["team"] },
       { key: "retro", label: "Retro & Coach", title: "회고와 다음 스프린트 · 코치에게", ids: ["retro", "coach"] },
@@ -1006,6 +1007,16 @@
     const keys = enabledFields();
     if (!keys.length) return empty("data/site.js의 fields에서 팀에 있는 분야를 켭니다.");
     return keys.map((key) => techBlock(key, t[key] || {}, submissionStatus(s, key))).join("");
+  }
+
+  // 스프린트 4 테스트 기준 정리. 승인 대상은 아니지만 제출한다. 문서 본문은 저장소에 두고 요약과 링크만 보인다.
+  function secTesting(s) {
+    const t = s.testCriteria;
+    if (!t) return "";
+    return `${linkField("문서", t.doc, "테스트 기준 정리")}
+      ${filled(t.summary) ? `<div class="prose">${rich(t.summary)}</div>` : ""}
+      ${criteriaRow(t.criteria)}
+      ${t.links?.length ? `<div class="report-links">${t.links.map((l) => link(l.url, l.label)).join("")}</div>` : ""}`;
   }
 
   // 완료 조건 체크리스트. 항목마다 { text, done, evidence }
