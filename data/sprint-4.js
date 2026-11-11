@@ -11,6 +11,7 @@ sprint({
   demoday: "2026-11-13",
   // 우형 전시회가 11.13(금)으로 정해지면 데모데이는 11.12(목)로 옮긴다
   theme: "",
+  presentation: { hideSections: ["retro", "coach"] },
 
   goal: "", // 개요 페이지 스프린트 목록에 보일 목표 한 줄
   highlights: [
@@ -154,7 +155,18 @@ sprint({
     },
   },
 
-  softskill: {}, // { activity: "", items: [{ title: "", body: "" }] }
+  // 이번 스프린트는 팀 활동이 아니라 각자 LMS+ 설문 두 개에 답한다. 응답 내용은 LMS+에 저장되어 옮겨 적지 않는다.
+  softskill: {
+    activity: "개인 설문 두 개 · 심리적 안전감 설문, 나 점검하기 설문 (LMS+)",
+    criteria: [
+      { text: "심리적 안전감 설문에 답했다", done: true, evidence: "팀원 5명 전원 완료" },
+      { text: "나 점검하기 설문에 답했다", done: true, evidence: "팀원 5명 전원 완료" },
+      { text: "팀원 전원이 두 설문에 답했는지 확인했다", done: true, evidence: "전원 완료" },
+    ],
+    items: [
+      { title: "응답 내용", body: "두 설문의 응답은 LMS+에 저장되므로 따로 옮겨 적지 않는다." },
+    ],
+  },
 
   retro: { gap: "", learned: "", change: "" },
   next: "",
