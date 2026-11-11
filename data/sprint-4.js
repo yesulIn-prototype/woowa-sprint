@@ -28,8 +28,9 @@ sprint({
 
 **다음에 바꿀 것**: 공연사 관계자가 3명뿐이라 배우가 관계자에게 자신을 알릴 시간이 부족했다는 응답이 나왔다. 관계자 섭외를 늘리고 배우가 어필하는 순서를 따로 둔다. 배우들이 원한 다음 프로그램(프로필 점검·이미지 피드백·모의 오디션)과 바라는 기능(더 많은 오디션·모집 공고)은 공고 모아 보기와 배우 페이지가 가려는 방향과 같았다.`,
       figures: [
-        { src: "assets/s4/networking-day-talk.jpg", caption: "남극장 대표님의 이야기 시간 (참가자 얼굴은 가림)", span: 6 },
-        { src: "assets/s4/networking-day-card-exchange.jpg", caption: "명함 교환 시간 (참가자 얼굴은 가림)", span: 6 },
+        { src: "assets/s4/networking-day-poster.jpg", caption: "네트워킹 데이 vol.1 포스터 (문의 연락처는 가림)", span: 4 },
+        { src: "assets/s4/networking-day-talk.jpg", caption: "남극장 대표님의 이야기 시간 (참가자 얼굴은 가림)", span: 8 },
+        { src: "assets/s4/networking-day-card-exchange.jpg", caption: "명함 교환 시간 (참가자 얼굴은 가림)", span: 12 },
       ],
     },
   ],
