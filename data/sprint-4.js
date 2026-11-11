@@ -11,7 +11,7 @@ sprint({
   demoday: "2026-11-13",
   // 우형 전시회가 11.13(금)으로 정해지면 데모데이는 11.12(목)로 옮긴다
   theme: "",
-  presentation: { hideSections: ["retro", "coach"] },
+  presentation: { hideSections: ["retro", "coach"], hideSubmissionStatus: true },
 
   goal: "", // 개요 페이지 스프린트 목록에 보일 목표 한 줄
   highlights: [
@@ -27,6 +27,10 @@ sprint({
 - **서비스로 이어진 것**: 행사 중 등록 시간에 배우 19명이 배우 페이지를 공개했다. 배우 수다방에는 23분 동안 글 27개가 올라왔고, 그중 11개는 캐스팅·프로필·커리어를 현업자에게 묻는 질문이라 남극장 대표님과 캐스팅 디렉터가 현장에서 답했다
 
 **다음에 바꿀 것**: 공연사 관계자가 3명뿐이라 배우가 관계자에게 자신을 알릴 시간이 부족했다는 응답이 나왔다. 관계자 섭외를 늘리고 배우가 어필하는 순서를 따로 둔다. 배우들이 원한 다음 프로그램(프로필 점검·이미지 피드백·모의 오디션)과 바라는 기능(더 많은 오디션·모집 공고)은 공고 모아 보기와 배우 페이지가 가려는 방향과 같았다.`,
+      figures: [
+        { src: "assets/s4/networking-day-talk.jpg", caption: "남극장 대표님의 이야기 시간 (참가자 얼굴은 가림)", span: 6 },
+        { src: "assets/s4/networking-day-card-exchange.jpg", caption: "명함 교환 시간 (참가자 얼굴은 가림)", span: 6 },
+      ],
     },
   ],
   backlog: [
@@ -212,9 +216,6 @@ sprint({
       { text: "심리적 안전감 설문에 답했다", done: true, evidence: "팀원 5명 전원 완료" },
       { text: "나 점검하기 설문에 답했다", done: true, evidence: "팀원 5명 전원 완료" },
       { text: "팀원 전원이 두 설문에 답했는지 확인했다", done: true, evidence: "전원 완료" },
-    ],
-    items: [
-      { title: "응답 내용", body: "두 설문의 응답은 LMS+에 저장되므로 따로 옮겨 적지 않는다." },
     ],
   },
 
