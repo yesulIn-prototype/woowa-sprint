@@ -10,10 +10,10 @@ sprint({
   deadline: "2026-11-12T18:00",
   demoday: "2026-11-13",
   // 우형 전시회가 11.13(금)으로 정해지면 데모데이는 11.12(목)로 옮긴다
-  theme: "",
-  presentation: { hideSections: ["retro", "coach"], hideSubmissionStatus: true },
+  theme: "공연사와 배우를 직접 만나게 하고, 지금까지 만든 것이 실제로 쓰이는지 확인했다.",
+  presentation: { hideSections: ["focus", "product", "retro", "coach"], hideSubmissionStatus: true },
 
-  goal: "", // 개요 페이지 스프린트 목록에 보일 목표 한 줄
+  goal: "네트워킹 데이로 공연사와 배우를 직접 잇고, 배우가 예술in을 계속 찾는 이유를 확인한다", // 개요 페이지 스프린트 목록에 보일 목표 한 줄
   highlights: [
     {
       title: "예술in 네트워킹 데이 vol.1 (11.9 월)",
