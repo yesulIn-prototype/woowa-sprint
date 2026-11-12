@@ -1006,7 +1006,8 @@
     const t = s.tech || {};
     const keys = enabledFields();
     if (!keys.length) return empty("data/site.js의 fields에서 팀에 있는 분야를 켭니다.");
-    return keys.map((key) => techBlock(key, t[key] || {}, submissionStatus(s, key))).join("");
+    // 한 분야에 요구사항이 여럿이면 배열로 적는다. 각 항목에 id를 적으면 그 주소(#id)로 바로 열 수 있다.
+    return keys.flatMap((key) => [].concat(t[key] || {}).map((x) => techBlock(key, x, submissionStatus(s, key)))).join("");
   }
 
   // 스프린트 4 테스트 기준 정리. 승인 대상은 아니지만 제출한다. 문서 본문은 저장소에 두고 요약과 링크만 보인다.
@@ -1057,7 +1058,7 @@
           ${field("조치 뒤 지표", i.after, "조치 후 확인한 수치나 화면")}
         </div>`
       : "";
-    return `<div class="tech">
+    return `<div class="tech"${filled(t.id) ? ` id="${esc(t.id)}"` : ""}>
       ${subhead(FIELD_NAME[key], badge(status))}
       ${row(
         isFront ? "미션" : "요구사항",
