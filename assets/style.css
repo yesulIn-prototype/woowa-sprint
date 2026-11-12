@@ -191,7 +191,7 @@ h4 {
 .brand img {
   display: block;
   width: auto;
-  height: 28px;
+  height: 40px;
 }
 
 .brand-sub {
@@ -1728,6 +1728,10 @@ figcaption {
 
   .subhead {
     margin-top: 36px;
+  }
+
+  .brand img {
+    height: 36px;
   }
 
   .brand-sub {

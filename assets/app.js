@@ -277,7 +277,7 @@
       ),
     );
     return `<header class="topbar"><div class="wrap topbar-inner">
-      <a class="brand" href="index.html"><img src="assets/logo.png" alt="${esc(store.site.team)}" width="49" height="28"><span class="brand-sub">스프린트 기록</span></a>
+      <a class="brand" href="index.html"><img src="assets/logo.png?v=20261112" alt="${esc(store.site.team)}" width="695" height="308"><span class="brand-sub">스프린트 기록</span></a>
       <nav aria-label="스프린트">${items.join("")}</nav>
     </div></header>`;
   }
