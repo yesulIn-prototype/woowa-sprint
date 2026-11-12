@@ -817,7 +817,7 @@
   function pmfSurvey(p, stat) {
     if (!p) return "";
     const counts = p.counts || {};
-    const total = Number(p.respondents);
+    const total = parseInt(p.respondents, 10);
     const share = (n) => (filled(n) && total > 0 ? `${Math.round((Number(n) / total) * 100)}%` : "");
     return `<div class="pmf" id="pmf">
       ${subhead("PMF 설문")}
